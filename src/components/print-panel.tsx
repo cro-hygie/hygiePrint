@@ -249,7 +249,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
           {mode === "attestation"
-            ? "Fond vectoriel Mod. G11 FR *17* (propre, sans photo). Exportez en PDF ou ajustez les marges pour calibrer votre LX-350."
+            ? "Fond : scan officiel G11 que tu as envoyé (propre). Ajuste les marges X/Y pour calibrer sur ton carnet *17*."
             : simulatePaper
               ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
               : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}

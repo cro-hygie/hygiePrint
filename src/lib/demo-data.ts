@@ -26,7 +26,7 @@ export const DEMO_ATTESTATION = {
     { code: "567011", date: "11/09", amount: 25.5, used: true },
     { code: "567011", date: "16/09", amount: 25.5, used: true },
     { code: "567011", date: "18/09", amount: 25.5, used: true },
-    ...Array.from({ length: 10 }, () => ({
+    ...Array.from({ length: 12 }, () => ({
       code: "",
       date: "",
       amount: 0,

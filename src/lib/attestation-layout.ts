@@ -1,11 +1,11 @@
 /**
  * Modèle G11 FR *17* — Attestation de soins donnés (Belgique)
- * Référence : template vectoriel Mod. G11 FR *17* (composant FormTemplateBackground)
+ * Fond : scan officiel propre public/forms/mod-g11-fr.png (1500×3600 px)
  * Papier continu Std plié allemand — 241 mm de large.
  */
 export const FORM_MODEL = "G11-FR *17*";
 export const FORM_WIDTH_MM = 241;
-export const FORM_HEIGHT_MM = Math.round((FORM_WIDTH_MM * 2048) / 1536); // 321 mm
+export const FORM_HEIGHT_MM = Math.round((FORM_WIDTH_MM * 3600) / 1500); // 578 mm
 
 export interface FieldPosition {
   id: string;
@@ -30,16 +30,15 @@ function pos(
   };
 }
 
-/** 8 lignes × 2 colonnes (Date | Nomenclature) — Mod. G11 FR *17* */
-const SERVICE_ROWS = 8;
+const SERVICE_ROWS = 9;
 
 function buildServiceFields(): FieldPosition[] {
   const fields: FieldPosition[] = [];
-  const rowStartPct = 17.5;
-  const rowStepPct = 3.1;
+  const rowStartPct = 13.8;
+  const rowStepPct = 2.25;
   const blocks = [
-    { dateLeftPct: 8, codeLeftPct: 22, prefix: "l" },
-    { dateLeftPct: 52, codeLeftPct: 66, prefix: "r" },
+    { dateLeftPct: 7, codeLeftPct: 21, prefix: "l" },
+    { dateLeftPct: 51, codeLeftPct: 65, prefix: "r" },
   ];
 
   for (let row = 0; row < SERVICE_ROWS; row++) {
@@ -67,75 +66,73 @@ export const ATTESTATION_FIELDS: FieldPosition[] = [
   {
     id: "patient-full-header",
     label: "Nom et prénom (en-tête)",
-    ...pos(4.0, 22, 70, "9pt"),
+    ...pos(3.2, 20, 72, "9pt"),
   },
   {
     id: "mutuelle-header",
     label: "Organisme assureur",
-    ...pos(7.0, 22, 70, "9pt"),
+    ...pos(5.0, 20, 72, "9pt"),
   },
   {
     id: "niss-header",
     label: "NISS",
-    ...pos(10.0, 22, 32, "9pt"),
+    ...pos(6.8, 20, 34, "9pt"),
   },
   {
     id: "patient-address",
     label: "Adresse patient",
-    ...pos(10.0, 56, 38, "8pt"),
+    ...pos(6.8, 55, 38, "8pt"),
   },
   {
     id: "patient-full-main",
     label: "Nom et prénom (corps)",
-    ...pos(14.5, 22, 70, "9pt"),
+    ...pos(10.2, 20, 72, "9pt"),
   },
-
   ...buildServiceFields(),
-
   {
     id: "prescriber-name",
     label: "Prescrit par",
-    ...pos(58.0, 22, 38),
+    ...pos(36.2, 20, 38),
   },
   {
     id: "prescriber-date",
     label: "Date prescription",
-    ...pos(58.0, 64, 14),
+    ...pos(36.2, 62, 14),
   },
   {
     id: "prescriber-inami",
     label: "INAMI prescripteur",
-    ...pos(61.0, 22, 55),
+    ...pos(38.2, 20, 55),
   },
   {
     id: "cachet",
     label: "Identification dispensateur",
-    ...pos(65.0, 8, 42, "7pt"),
+    ...pos(42.5, 6, 40, "7pt"),
   },
   {
     id: "total",
     label: "Montant total EUR",
-    ...pos(66.0, 82, 12, "9pt"),
+    ...pos(43.5, 80, 12, "9pt"),
   },
   {
     id: "attestation-date",
     label: "Date attestation",
-    ...pos(73.0, 64, 14),
+    ...pos(50.5, 62, 14),
   },
   {
     id: "bce",
     label: "N° BCE",
-    ...pos(84.0, 30, 28),
+    ...pos(66.5, 28, 28),
   },
   {
     id: "receipt-amount",
     label: "Montant reçu EUR",
-    ...pos(88.0, 30, 30, "9pt"),
+    ...pos(70.5, 28, 30, "9pt"),
   },
   {
     id: "receipt-date",
     label: "Date reçu",
-    ...pos(92.0, 64, 14),
+    ...pos(74.5, 62, 14),
   },
 ];
 
