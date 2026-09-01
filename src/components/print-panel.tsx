@@ -14,8 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { exportElementToPdf, pdfFilename } from "@/lib/export-pdf";
+import { DEMO_ATTESTATION, DEMO_PRACTITIONER } from "@/lib/demo-data";
 import type { AppSettings } from "@/lib/types";
-import { Download, FileText, Printer } from "lucide-react";
+import { Download, FileText, Printer, RotateCcw } from "lucide-react";
 import { useRef, useState } from "react";
 
 interface PrintPanelProps {
@@ -51,15 +52,22 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
     }
   };
 
+  const handleResetDemo = () => {
+    onChange({
+      practitioner: { ...DEMO_PRACTITIONER },
+      attestation: { ...DEMO_ATTESTATION },
+    });
+  };
+
   return (
     <div className="space-y-6">
       {mode === "attestation" && (
         <Card>
           <CardHeader>
-            <CardTitle>Mod. G11 FR — données de démonstration</CardTitle>
+            <CardTitle>Démo kiné — Philippe Henrard</CardTitle>
             <CardDescription>
-              Champs alignés sur le formulaire « Attestation de soins donnés »
-              (scan intégré en mode simulation)
+              6 séances (code 567011) — données fictives mais réalistes pour
+              tester l&apos;alignement sur le Mod. G11 FR *17*
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -202,6 +210,13 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
           <Download className="mr-2 size-4" />
           {exporting ? "Export en cours…" : "Exporter en PDF"}
         </Button>
+
+        {mode === "attestation" && (
+          <Button onClick={handleResetDemo} variant="outline">
+            <RotateCcw className="mr-2 size-4" />
+            Recharger la démo
+          </Button>
+        )}
       </div>
 
       {exportError && (
@@ -234,7 +249,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
           {mode === "attestation"
-            ? "Exportez en PDF pour archiver ou imprimer depuis Adobe/aperçu. Le fichier inclut le scan G11 + le texte positionné."
+            ? "Fond vectoriel Mod. G11 FR *17* (propre, sans photo). Exportez en PDF ou ajustez les marges pour calibrer votre LX-350."
             : simulatePaper
               ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
               : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}

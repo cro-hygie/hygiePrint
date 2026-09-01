@@ -1,3 +1,5 @@
+import { DEMO_ATTESTATION, DEMO_PRACTITIONER } from "./demo-data";
+
 export type Profession = "medecin" | "kine" | "dentiste";
 
 export type PrinterModel =
@@ -71,50 +73,11 @@ export const DEFAULT_PRINTER: PrinterConfig = {
 };
 
 export const DEFAULT_PRACTITIONER: PractitionerProfile = {
-  profession: "kine",
-  lastName: "",
-  firstName: "",
-  inamiNumber: "",
-  bceNumber: "",
-  address: "",
-  city: "",
-  postalCode: "",
-  phone: "",
+  ...DEMO_PRACTITIONER,
 };
 
 export const DEFAULT_ATTESTATION: AttestationData = {
-  patient: {
-    lastName: "Dupont",
-    firstName: "Marie",
-    niss: "85.12.30-123.45",
-    mutuelle: "Solidaris",
-    address: "Rue Neuve 12, 1000 Bruxelles",
-  },
-  services: [
-    { code: "567011", date: "01/09", amount: 25.5, used: true },
-    { code: "567012", date: "03/09", amount: 25.5, used: true },
-    { code: "567013", date: "05/09", amount: 25.5, used: true },
-    { code: "567014", date: "08/09", amount: 25.5, used: true },
-    { code: "567015", date: "10/09", amount: 25.5, used: true },
-    { code: "567016", date: "12/09", amount: 25.5, used: true },
-    { code: "567017", date: "15/09", amount: 25.5, used: true },
-    { code: "567018", date: "17/09", amount: 25.5, used: true },
-    { code: "567019", date: "19/09", amount: 25.5, used: true },
-    { code: "567020", date: "22/09", amount: 25.5, used: true },
-    { code: "567021", date: "24/09", amount: 25.5, used: true },
-    { code: "567022", date: "26/09", amount: 25.5, used: true },
-    { code: "567023", date: "28/09", amount: 25.5, used: true },
-    { code: "567024", date: "30/09", amount: 25.5, used: true },
-    { code: "", date: "", amount: 0, used: false },
-    { code: "", date: "", amount: 0, used: false },
-  ],
-  totalAmount: 357.0,
-  patientPaid: 107.1,
-  attestationDate: "12/09/2026",
-  receiptText: "",
-  prescriberName: "Dr Martin",
-  prescriberDate: "01/08/2026",
-  prescriberInami: "1-11111-22-333",
+  ...DEMO_ATTESTATION,
 };
 
 export const DEFAULT_SETTINGS: AppSettings = {

@@ -1,6 +1,6 @@
 /**
  * Modèle G11 FR *17* — Attestation de soins donnés (Belgique)
- * Référence visuelle : public/forms/mod-g11-fr.png (1536×2048 px)
+ * Référence : template vectoriel Mod. G11 FR *17* (composant FormTemplateBackground)
  * Papier continu Std plié allemand — 241 mm de large.
  */
 export const FORM_MODEL = "G11-FR *17*";
