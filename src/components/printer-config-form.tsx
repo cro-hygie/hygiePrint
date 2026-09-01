@@ -115,8 +115,8 @@ export function PrinterConfigForm({
                 const val = Array.isArray(v) ? v[0] : v;
                 updatePrinter({ marginX: val ?? 0 });
               }}
-              min={-10}
-              max={20}
+              min={-240}
+              max={240}
               step={0.5}
             />
           </div>
@@ -134,8 +134,8 @@ export function PrinterConfigForm({
                 const val = Array.isArray(v) ? v[0] : v;
                 updatePrinter({ marginY: val ?? 0 });
               }}
-              min={-10}
-              max={20}
+              min={-240}
+              max={240}
               step={0.5}
             />
           </div>
