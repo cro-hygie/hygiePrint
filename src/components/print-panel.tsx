@@ -35,17 +35,26 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
     window.print();
   };
 
-  const handleExportPdf = async () => {
+  const handleExportPdf = async (includeScan = false) => {
     setExporting(true);
     setExportError(null);
     try {
+      if (!printAreaRef.current) {
+        throw new Error("La zone d'aperçu est vide — rechargez la page.");
+      }
       const prefix = mode === "test" ? "calibration" : "attestation";
-      const filename = pdfFilename(prefix);
+      const filename = pdfFilename(
+        prefix,
+        includeScan ? "controle" : "impression",
+      );
       if (mode === "attestation") {
-        exportAttestationToPdf(settings, filename);
+        await exportAttestationToPdf(printAreaRef.current, filename, {
+          includeScan,
+        });
       } else {
-        if (!printAreaRef.current) return;
-        await exportElementToPdf(printAreaRef.current, filename);
+        await exportElementToPdf(printAreaRef.current, filename, {
+          includeScan,
+        });
       }
     } catch (err) {
       const message =
@@ -107,10 +116,25 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
             : "Imprimer l'attestation"}
         </Button>
 
-        <Button onClick={handleExportPdf} variant="secondary" disabled={exporting}>
+        <Button
+          onClick={() => handleExportPdf(false)}
+          variant="secondary"
+          disabled={exporting}
+        >
           <Download className="mr-2 size-4" />
-          {exporting ? "Export en cours…" : "Exporter en PDF"}
+          {exporting ? "Export en cours…" : "Exporter PDF (impression)"}
         </Button>
+
+        {mode === "attestation" && (
+          <Button
+            onClick={() => handleExportPdf(true)}
+            variant="outline"
+            disabled={exporting}
+          >
+            <Download className="mr-2 size-4" />
+            PDF contrôle (avec scan)
+          </Button>
+        )}
       </div>
 
       {exportError && (
@@ -144,7 +168,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
           {mode === "attestation"
-            ? "À l'écran : scan visible pour calibrer. Export PDF / impression : texte seul (sans scan), pour votre carnet pré-imprimé."
+            ? "Le PDF d'impression reprend exactement l'aperçu (texte seul). Utilisez « PDF contrôle (avec scan) » pour vérifier l'alignement sur papier blanc avant d'imprimer sur le carnet."
             : simulatePaper
               ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
               : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}

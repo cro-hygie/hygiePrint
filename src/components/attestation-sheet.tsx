@@ -43,7 +43,7 @@ export function AttestationSheet({
       {simulatePaper && <FormTemplateBackground />}
 
       {showGrid && (
-        <div className="pointer-events-none absolute inset-0 z-20 opacity-20">
+        <div className="pdf-exclude pointer-events-none absolute inset-0 z-20 opacity-20">
           {Array.from({ length: 25 }).map((_, i) => (
             <div
               key={`v-${i}`}
@@ -65,7 +65,7 @@ export function AttestationSheet({
         ATTESTATION_FIELDS.map((field) => (
           <div
             key={`marker-${field.id}`}
-            className="pointer-events-none absolute z-30"
+            className="pdf-exclude pointer-events-none absolute z-30"
             style={{
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,
