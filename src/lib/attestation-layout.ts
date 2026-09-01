@@ -1,12 +1,11 @@
 /**
- * Modèle G11 FR — Attestation de soins donnés (Belgique)
- * Dimensions basées sur le formulaire continu 241 mm (Std plié allemand).
- * Positions calibrées sur scan réel ; affiner via marges X/Y dans l'app.
+ * Modèle G11 FR *15* — Attestation de soins donnés (Belgique)
+ * Référence visuelle : public/forms/mod-g11-fr.png (1500×3600 px)
+ * Papier continu Std plié allemand — 241 mm de large.
  */
-export const FORM_MODEL = "G11-FR";
+export const FORM_MODEL = "G11-FR *15*";
 export const FORM_WIDTH_MM = 241;
-/** Ratio scan 1536×2048 → hauteur proportionnelle à 241 mm */
-export const FORM_HEIGHT_MM = 321;
+export const FORM_HEIGHT_MM = Math.round((FORM_WIDTH_MM * 3600) / 1500); // 578 mm
 
 export interface FieldPosition {
   id: string;
@@ -17,171 +16,138 @@ export interface FieldPosition {
   fontSize?: string;
 }
 
-/** Zone imprimable (après bande perforée gauche) */
-export const PRINTABLE_OFFSET_X = 20;
+function pos(
+  topPct: number,
+  leftPct: number,
+  widthPct?: number,
+  fontSize = "8pt",
+): Pick<FieldPosition, "top" | "left" | "width" | "fontSize"> {
+  return {
+    top: (FORM_HEIGHT_MM * topPct) / 100,
+    left: (FORM_WIDTH_MM * leftPct) / 100,
+    width: widthPct ? (FORM_WIDTH_MM * widthPct) / 100 : undefined,
+    fontSize,
+  };
+}
 
 export const ATTESTATION_FIELDS: FieldPosition[] = [
-  // --- En-tête patient (vignette O.A.) ---
+  // --- En-tête patient ---
   {
     id: "patient-full-header",
     label: "Nom et prénom (en-tête)",
-    top: 14,
-    left: 52,
-    width: 165,
-    fontSize: "9pt",
+    ...pos(3.2, 20, 72, "9pt"),
   },
   {
     id: "mutuelle-header",
     label: "Organisme assureur",
-    top: 22,
-    left: 52,
-    width: 165,
-    fontSize: "9pt",
+    ...pos(5.0, 20, 72, "9pt"),
   },
   {
     id: "niss-header",
     label: "NISS",
-    top: 30,
-    left: 52,
-    width: 70,
-    fontSize: "9pt",
+    ...pos(6.8, 20, 34, "9pt"),
   },
   {
     id: "patient-address",
     label: "Adresse patient",
-    top: 30,
-    left: 128,
-    width: 90,
-    fontSize: "8pt",
+    ...pos(6.8, 55, 38, "8pt"),
   },
 
-  // --- Titre attestation ---
+  // --- Corps attestation ---
   {
     id: "patient-full-main",
     label: "Nom et prénom (corps)",
-    top: 50,
-    left: 52,
-    width: 165,
-    fontSize: "9pt",
+    ...pos(10.2, 20, 72, "9pt"),
   },
 
-  // --- Tableau prestations (6 lignes × 2 colonnes Date | Nomenclature) ---
+  // --- Tableau : 9 lignes × 2 blocs (Date | Nomenclature) ---
   ...buildServiceFields(),
 
   // --- Prescripteur ---
   {
     id: "prescriber-name",
     label: "Prescrit par",
-    top: 132,
-    left: 52,
-    width: 90,
-    fontSize: "8pt",
+    ...pos(36.2, 20, 38),
   },
   {
     id: "prescriber-date",
     label: "Date prescription",
-    top: 132,
-    left: 148,
-    width: 35,
-    fontSize: "8pt",
+    ...pos(36.2, 62, 14),
   },
   {
     id: "prescriber-inami",
     label: "INAMI prescripteur",
-    top: 140,
-    left: 52,
-    width: 100,
-    fontSize: "8pt",
+    ...pos(38.2, 20, 55),
   },
 
   // --- Dispensateur ---
   {
     id: "cachet",
     label: "Identification dispensateur",
-    top: 158,
-    left: 24,
-    width: 115,
-    fontSize: "8pt",
+    ...pos(42.5, 6, 40, "7pt"),
   },
   {
     id: "total",
     label: "Montant total EUR",
-    top: 162,
-    left: 198,
-    width: 28,
-    fontSize: "9pt",
+    ...pos(43.5, 80, 12, "9pt"),
   },
   {
     id: "attestation-date",
     label: "Date attestation",
-    top: 188,
-    left: 148,
-    width: 35,
-    fontSize: "8pt",
+    ...pos(50.5, 62, 14),
   },
 
-  // --- Reçu (partie inférieure) ---
+  // --- Reçu (sous perforation) ---
   {
     id: "bce",
     label: "N° BCE",
-    top: 214,
-    left: 70,
-    width: 55,
-    fontSize: "8pt",
-  },
-  {
-    id: "receipt-date",
-    label: "Date reçu",
-    top: 214,
-    left: 148,
-    width: 35,
-    fontSize: "8pt",
+    ...pos(66.5, 28, 28),
   },
   {
     id: "receipt-amount",
     label: "Montant reçu EUR",
-    top: 222,
-    left: 70,
-    width: 50,
-    fontSize: "9pt",
+    ...pos(70.5, 28, 30, "9pt"),
+  },
+  {
+    id: "receipt-date",
+    label: "Date reçu",
+    ...pos(74.5, 62, 14),
   },
 ];
 
+const SERVICE_ROWS = 9;
+
 function buildServiceFields(): FieldPosition[] {
   const fields: FieldPosition[] = [];
-  const rowStart = 62;
-  const rowHeight = 5.6;
+  const rowStartPct = 13.8;
+  const rowStepPct = 2.25;
   const blocks = [
-    { dateLeft: 24, codeLeft: 58, prefix: "l" },
-    { dateLeft: 126, codeLeft: 160, prefix: "r" },
+    { dateLeftPct: 7, codeLeftPct: 21, prefix: "l" },
+    { dateLeftPct: 51, codeLeftPct: 65, prefix: "r" },
   ];
 
-  for (let row = 0; row < 6; row++) {
+  for (let row = 0; row < SERVICE_ROWS; row++) {
     for (const block of blocks) {
       const n = row + 1;
-      const top = rowStart + row * rowHeight;
+      const topPct = rowStartPct + row * rowStepPct;
       fields.push(
         {
           id: `service-${block.prefix}${n}-date`,
-          label: `Date prestation ${block.prefix.toUpperCase()}${n}`,
-          top,
-          left: block.dateLeft,
-          width: 28,
-          fontSize: "8pt",
+          label: `Date ${block.prefix.toUpperCase()}${n}`,
+          ...pos(topPct, block.dateLeftPct, 11),
         },
         {
           id: `service-${block.prefix}${n}-code`,
-          label: `Code nomenclature ${block.prefix.toUpperCase()}${n}`,
-          top,
-          left: block.codeLeft,
-          width: 38,
-          fontSize: "8pt",
+          label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
+          ...pos(topPct, block.codeLeftPct, 14),
         },
       );
     }
   }
   return fields;
 }
+
+export const SERVICE_SLOT_COUNT = SERVICE_ROWS * 2;
 
 export function serviceSlotIndex(fieldId: string): number {
   const match = fieldId.match(/^service-([lr])(\d+)-(date|code)$/);
