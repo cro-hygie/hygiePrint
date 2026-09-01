@@ -1,11 +1,23 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
-  ATTESTATION_FIELDS,
-  FORM_HEIGHT_MM,
+  CONTENT_WIDTH_MM,
+  FONT_BODY,
+  FONT_TABLE,
   FORM_WIDTH_MM,
   getFieldValue,
+  getServiceCell,
+  PAGE1_HEIGHT_MM,
+  PAGE2_HEIGHT_MM,
+  SERVICE_ROWS,
   serviceSlotIndex,
+  STATIC_FIELDS,
+  TABLE_COL_RIGHT_OFFSET_MM,
+  TABLE_LEFT_MM,
+  TABLE_ROW_HEIGHT_MM,
+  TABLE_SPAN_WIDTH_MM,
+  TABLE_TOP_MM,
 } from "@/lib/attestation-layout";
 import type { AppSettings } from "@/lib/types";
 import { FormTemplateBackground } from "@/components/form-template";
@@ -18,29 +30,137 @@ interface AttestationSheetProps {
   className?: string;
 }
 
-export function AttestationSheet({
-  settings,
-  showGrid = false,
-  showFieldMarkers = false,
-  simulatePaper = false,
-  className = "",
-}: AttestationSheetProps) {
-  const { printer, practitioner, attestation } = settings;
-  const offsetX = printer.marginX;
-  const offsetY = printer.marginY;
+const FONT = "Consolas, Courier New, Courier, monospace";
+
+function FieldBlock({
+  top,
+  left,
+  width,
+  fontSize = FONT_BODY,
+  multiline,
+  children,
+}: {
+  top: number;
+  left: number;
+  width?: number;
+  fontSize?: string;
+  multiline?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={`absolute z-10 text-black ${multiline ? "whitespace-pre-wrap" : "whitespace-nowrap"}`}
+      style={{
+        top: `${top}mm`,
+        left: `${left}mm`,
+        width: width ? `${width}mm` : undefined,
+        fontSize,
+        fontFamily: FONT,
+        lineHeight: multiline ? 1.2 : 1,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function ServiceTable({
+  attestation,
+  offsetX,
+  offsetY,
+  showPlaceholders,
+}: {
+  attestation: AppSettings["attestation"];
+  offsetX: number;
+  offsetY: number;
+  showPlaceholders: boolean;
+}) {
+  const renderColumn = (column: "l" | "r") => (
+    <div
+      className="inline-block align-top"
+      style={{
+        marginLeft: column === "r" ? `${TABLE_COL_RIGHT_OFFSET_MM}mm` : undefined,
+      }}
+    >
+      {Array.from({ length: SERVICE_ROWS }, (_, i) => {
+        const slot = serviceSlotIndex(column, i + 1);
+        const { date, code } = getServiceCell(slot, attestation);
+        const used = attestation.services[slot]?.used;
+        return (
+          <div
+            key={`${column}-${i}`}
+            style={{ height: `${TABLE_ROW_HEIGHT_MM}mm`, overflow: "hidden" }}
+          >
+            <span
+              className="inline-block"
+              style={{ width: `${TABLE_SPAN_WIDTH_MM}mm` }}
+            >
+              {date}
+            </span>
+            <span
+              className="inline-block"
+              style={{ width: `${TABLE_SPAN_WIDTH_MM}mm` }}
+            >
+              {code}
+            </span>
+            {!used && (
+              <span className="sr-only">ligne vide</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div
-      className={`attestation-sheet relative bg-white text-black ${className}`}
+      className="absolute z-10"
       style={{
-        width: `${FORM_WIDTH_MM}mm`,
-        height: `${FORM_HEIGHT_MM}mm`,
-        fontFamily: "Courier New, Courier, monospace",
-        fontSize: "8pt",
-        lineHeight: 1.1,
+        top: `${TABLE_TOP_MM + offsetY}mm`,
+        left: `${TABLE_LEFT_MM + offsetX}mm`,
+        fontSize: FONT_TABLE,
+        fontFamily: FONT,
       }}
     >
-      {simulatePaper && <FormTemplateBackground />}
+      {renderColumn("l")}
+      {renderColumn("r")}
+    </div>
+  );
+}
+
+function CertificatePage({
+  page,
+  settings,
+  offsetX,
+  offsetY,
+  simulatePaper,
+  showGrid,
+  showFieldMarkers,
+  heightMm,
+}: {
+  page: 1 | 2;
+  settings: AppSettings;
+  offsetX: number;
+  offsetY: number;
+  simulatePaper: boolean;
+  showGrid: boolean;
+  showFieldMarkers: boolean;
+  heightMm: number;
+}) {
+  const { printer, practitioner, attestation } = settings;
+  const fields = STATIC_FIELDS.filter((f) => f.page === page);
+
+  return (
+    <div
+      className="certificate-page relative bg-white text-black"
+      style={{
+        width: `${FORM_WIDTH_MM}mm`,
+        height: `${heightMm}mm`,
+        fontFamily: FONT,
+        fontSize: FONT_BODY,
+      }}
+    >
+      {simulatePaper && page === 1 && <FormTemplateBackground />}
 
       {showGrid && (
         <div className="pdf-exclude pointer-events-none absolute inset-0 z-20 opacity-20">
@@ -51,32 +171,30 @@ export function AttestationSheet({
               style={{ left: `${i * 10}mm` }}
             />
           ))}
-          {Array.from({ length: 58 }).map((_, i) => (
-            <div
-              key={`h-${i}`}
-              className="absolute left-0 right-0 border-t border-blue-400"
-              style={{ top: `${i * 10}mm` }}
-            />
-          ))}
         </div>
       )}
 
+      {page === 1 && (
+        <ServiceTable
+          attestation={attestation}
+          offsetX={offsetX}
+          offsetY={offsetY}
+        />
+      )}
+
       {showFieldMarkers &&
-        ATTESTATION_FIELDS.map((field) => (
+        fields.map((field) => (
           <div
-            key={`marker-${field.id}`}
-            className="pdf-exclude pointer-events-none absolute z-30"
+            key={`m-${field.id}`}
+            className="pdf-exclude pointer-events-none absolute z-30 size-1.5 rounded-full bg-red-500"
             style={{
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,
             }}
-            title={field.label}
-          >
-            <span className="block size-1.5 rounded-full bg-red-500 ring-1 ring-red-700" />
-          </div>
+          />
         ))}
 
-      {ATTESTATION_FIELDS.map((field) => {
+      {fields.map((field) => {
         const value = getFieldValue(
           field.id,
           practitioner,
@@ -84,34 +202,65 @@ export function AttestationSheet({
           printer.showAmountOnAttestation,
         );
         if (!value) return null;
-
-        const slot = serviceSlotIndex(field.id);
-        const service = slot >= 0 ? attestation.services[slot] : null;
-        const strikethrough =
-          service &&
-          !service.used &&
-          printer.strikeUnusedServices &&
-          field.id.startsWith("service-");
-
         return (
-          <div
+          <FieldBlock
             key={field.id}
-            className={`absolute z-10 ${
-              field.id === "cachet" ? "whitespace-pre-wrap" : "whitespace-nowrap"
-            }`}
-            style={{
-              top: `${field.top + offsetY}mm`,
-              left: `${field.left + offsetX}mm`,
-              width: field.width ? `${field.width}mm` : undefined,
-              fontSize: field.fontSize,
-              textDecoration: strikethrough ? "line-through" : undefined,
-            }}
-            title={field.label}
+            top={field.top + offsetY}
+            left={field.left + offsetX}
+            width={field.width}
+            fontSize={field.fontSize}
+            multiline={field.multiline}
           >
             {value}
-          </div>
+          </FieldBlock>
         );
       })}
     </div>
   );
 }
+
+export function AttestationSheet({
+  settings,
+  showGrid = false,
+  showFieldMarkers = false,
+  simulatePaper = false,
+  className = "",
+}: AttestationSheetProps) {
+  const { printer } = settings;
+  const offsetX = printer.marginX;
+  const offsetY = printer.marginY;
+
+  return (
+    <div
+      className={`attestation-sheet flex flex-col ${className}`}
+      style={{ width: `${FORM_WIDTH_MM}mm` }}
+    >
+      <CertificatePage
+        page={1}
+        settings={settings}
+        offsetX={offsetX}
+        offsetY={offsetY}
+        simulatePaper={simulatePaper}
+        showGrid={showGrid}
+        showFieldMarkers={showFieldMarkers}
+        heightMm={PAGE1_HEIGHT_MM}
+      />
+      <div
+        className="certificate-perforation border-t border-dashed border-gray-300 print:border-none"
+        aria-hidden
+      />
+      <CertificatePage
+        page={2}
+        settings={settings}
+        offsetX={offsetX}
+        offsetY={offsetY}
+        simulatePaper={false}
+        showGrid={false}
+        showFieldMarkers={showFieldMarkers}
+        heightMm={PAGE2_HEIGHT_MM}
+      />
+    </div>
+  );
+}
+
+export { CONTENT_WIDTH_MM };

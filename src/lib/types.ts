@@ -54,6 +54,7 @@ export interface AttestationData {
   prescriberName: string;
   prescriberDate: string;
   prescriberInami: string;
+  invoiceRef: string;
 }
 
 export interface AppSettings {

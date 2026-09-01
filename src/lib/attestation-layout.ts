@@ -1,161 +1,65 @@
 /**
- * Modèle G11 FR — Attestation de soins donnés (Belgique)
- * Positions calibrées sur le scan public/forms/mod-g11-fr.png (1500×3600 px).
+ * Layout calibré sur hygie-soft (careCertificatePrint.css) — production belge G11.
+ * Coordonnées en mm (1 cm hygie = 10 mm).
  */
 export const FORM_MODEL = "G11-FR";
-export const FORM_IMAGE_WIDTH_PX = 1500;
-export const FORM_IMAGE_HEIGHT_PX = 3600;
 export const FORM_WIDTH_MM = 241;
-export const FORM_HEIGHT_MM = Math.round(
-  (FORM_WIDTH_MM * FORM_IMAGE_HEIGHT_PX) / FORM_IMAGE_WIDTH_PX,
-); // 578 mm
+/** Hauteur page 1 — attestation (avant perforation). */
+export const PAGE1_HEIGHT_MM = 261;
+/** Hauteur page 2 — reçu (après perforation). */
+export const PAGE2_HEIGHT_MM = 317;
+export const FORM_HEIGHT_MM = PAGE1_HEIGHT_MM + PAGE2_HEIGHT_MM;
 
-/** Texte posé juste au-dessus des pointillés. */
-const BASELINE_OFFSET_PX = 9;
+/** Largeur zone de contenu hygie-soft (body 10,2 cm). */
+export const CONTENT_WIDTH_MM = 102;
 
-export interface FieldPosition {
+export const FONT_BODY = "11pt";
+export const FONT_TABLE = "8pt";
+export const FONT_EMPHASIS = "12pt";
+
+export interface StaticField {
   id: string;
   label: string;
+  page: 1 | 2;
   top: number;
   left: number;
   width?: number;
   fontSize?: string;
+  multiline?: boolean;
 }
 
-function fromPx(
-  x: number,
-  y: number,
-  widthPx?: number,
-  fontSize = "7pt",
-): Pick<FieldPosition, "top" | "left" | "width" | "fontSize"> {
-  const adjustedY = y - BASELINE_OFFSET_PX;
-  return {
-    top: (adjustedY / FORM_IMAGE_HEIGHT_PX) * FORM_HEIGHT_MM,
-    left: (x / FORM_IMAGE_WIDTH_PX) * FORM_WIDTH_MM,
-    width: widthPx
-      ? (widthPx / FORM_IMAGE_WIDTH_PX) * FORM_WIDTH_MM
-      : undefined,
-    fontSize,
-  };
-}
-
-/** 10 lignes — centres de cellules mesurés sur le scan */
-const SERVICE_ROW_Y_PX = [
-  744, 797, 850, 904, 957, 1010, 1064, 1117, 1170, 1224,
+/** Champs positionnés en absolu — valeurs tirées de careCertificatePrint.css */
+export const STATIC_FIELDS: StaticField[] = [
+  { id: "patient-full-header", label: "Nom patient (en-tête)", page: 1, top: 27, left: 42, fontSize: FONT_BODY },
+  { id: "mutuelle-header", label: "Mutuelle", page: 1, top: 40, left: 35, fontSize: FONT_BODY },
+  { id: "niss-header", label: "NISS", page: 1, top: 45, left: 20, fontSize: FONT_BODY },
+  { id: "patient-address", label: "Adresse", page: 1, top: 52, left: 35, width: 70, fontSize: FONT_BODY, multiline: true },
+  { id: "patient-full-main", label: "Nom patient (corps)", page: 1, top: 74, left: 45, fontSize: FONT_BODY },
+  { id: "prescriber-name", label: "Prescrit par", page: 1, top: 163, left: 25, fontSize: FONT_BODY },
+  { id: "prescriber-date", label: "Date prescription", page: 1, top: 167, left: 25, fontSize: FONT_BODY },
+  { id: "prescriber-inami", label: "INAMI prescripteur", page: 1, top: 171, left: 68, fontSize: FONT_BODY },
+  { id: "total", label: "Montant / OUI", page: 1, top: 209, left: 65, fontSize: FONT_EMPHASIS },
+  { id: "cachet", label: "Identification dispensateur", page: 1, top: 217, left: 10, fontSize: FONT_EMPHASIS, multiline: true },
+  { id: "invoice-ref", label: "Référence", page: 1, top: 242, left: 70, fontSize: FONT_BODY },
+  { id: "attestation-date", label: "Date attestation", page: 1, top: 251, left: 58, fontSize: FONT_BODY },
+  { id: "bce", label: "N° BCE (reçu)", page: 2, top: 10, left: 55, fontSize: FONT_BODY },
+  { id: "receipt-date", label: "Date reçu", page: 2, top: 20, left: 60, fontSize: FONT_BODY },
+  { id: "receipt-amount", label: "Montant reçu", page: 2, top: 26, left: 35, fontSize: FONT_EMPHASIS },
 ];
 
-const SERVICE_ROWS = 10;
+/** Grille prestations — tableCode hygie-soft */
+export const TABLE_TOP_MM = 121;
+export const TABLE_LEFT_MM = 5;
+export const TABLE_ROW_HEIGHT_MM = 4.2;
+export const TABLE_SPAN_WIDTH_MM = 17;
+export const TABLE_COL_RIGHT_OFFSET_MM = -3;
 
-function buildServiceFields(): FieldPosition[] {
-  const fields: FieldPosition[] = [];
-  const blocks = [
-    { dateX: 200, codeX: 360, prefix: "l" },
-    { dateX: 800, codeX: 960, prefix: "r" },
-  ];
-
-  for (let row = 0; row < SERVICE_ROWS; row++) {
-    const y = SERVICE_ROW_Y_PX[row];
-    for (const block of blocks) {
-      const n = row + 1;
-      fields.push(
-        {
-          id: `service-${block.prefix}${n}-date`,
-          label: `Date ${block.prefix.toUpperCase()}${n}`,
-          ...fromPx(block.dateX, y, 120, "7pt"),
-        },
-        {
-          id: `service-${block.prefix}${n}-code`,
-          label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
-          ...fromPx(block.codeX, y, 140, "7pt"),
-        },
-      );
-    }
-  }
-  return fields;
-}
-
-export const ATTESTATION_FIELDS: FieldPosition[] = [
-  {
-    id: "patient-full-header",
-    label: "Nom et prénom (en-tête)",
-    ...fromPx(283, 290, 970, "8pt"),
-  },
-  {
-    id: "mutuelle-header",
-    label: "Organisme assureur",
-    ...fromPx(280, 312, 1020, "8pt"),
-  },
-  {
-    id: "niss-header",
-    label: "NISS",
-    ...fromPx(280, 346, 300, "8pt"),
-  },
-  {
-    id: "patient-address",
-    label: "Adresse patient",
-    ...fromPx(582, 362, 730, "7pt"),
-  },
-  {
-    id: "patient-full-main",
-    label: "Nom et prénom (corps)",
-    ...fromPx(286, 412, 1020, "8pt"),
-  },
-  ...buildServiceFields(),
-  {
-    id: "prescriber-name",
-    label: "Prescrit par",
-    ...fromPx(300, 1962, 480, "7pt"),
-  },
-  {
-    id: "prescriber-date",
-    label: "Date prescription",
-    ...fromPx(650, 2012, 180, "7pt"),
-  },
-  {
-    id: "prescriber-inami",
-    label: "INAMI prescripteur",
-    ...fromPx(300, 2055, 880, "7pt"),
-  },
-  {
-    id: "cachet",
-    label: "Identification dispensateur",
-    ...fromPx(180, 2098, 600, "6pt"),
-  },
-  {
-    id: "total",
-    label: "Montant total EUR",
-    ...fromPx(950, 2111, 100, "8pt"),
-  },
-  {
-    id: "attestation-date",
-    label: "Date attestation",
-    ...fromPx(900, 2227, 180, "7pt"),
-  },
-  {
-    id: "bce",
-    label: "N° BCE",
-    ...fromPx(300, 2981, 340, "7pt"),
-  },
-  {
-    id: "receipt-amount",
-    label: "Montant reçu EUR",
-    ...fromPx(300, 3001, 340, "8pt"),
-  },
-  {
-    id: "receipt-date",
-    label: "Date reçu",
-    ...fromPx(900, 3030, 180, "7pt"),
-  },
-];
-
+export const SERVICE_ROWS = 10;
 export const SERVICE_SLOT_COUNT = SERVICE_ROWS * 2;
 
-export function serviceSlotIndex(fieldId: string): number {
-  const match = fieldId.match(/^service-([lr])(\d+)-(date|code)$/);
-  if (!match) return -1;
-  const col = match[1] === "l" ? 0 : 1;
-  const row = parseInt(match[2]) - 1;
-  return row * 2 + col;
+/** Slot 0-9 = colonne gauche, 10-19 = colonne droite (comme hygie-soft). */
+export function serviceSlotIndex(column: "l" | "r", row: number): number {
+  return column === "l" ? row - 1 : 10 + row - 1;
 }
 
 export function getFieldValue(
@@ -182,13 +86,14 @@ export function getFieldValue(
     patientPaid: number;
     attestationDate: string;
     receiptText: string;
+    invoiceRef?: string;
     prescriberName?: string;
     prescriberDate?: string;
     prescriberInami?: string;
   },
   showAmount: boolean,
 ): string {
-  const patientFull = `${attestation.patient.lastName.toUpperCase()} ${attestation.patient.firstName}`;
+  const patientFull = `${attestation.patient.lastName} ${attestation.patient.firstName}`;
 
   switch (fieldId) {
     case "patient-full-header":
@@ -209,32 +114,51 @@ export function getFieldValue(
     case "attestation-date":
     case "receipt-date":
       return attestation.attestationDate;
+    case "invoice-ref":
+      return attestation.invoiceRef ?? "";
     case "total":
       return showAmount ? attestation.totalAmount.toFixed(2) : "OUI";
     case "receipt-amount":
       return attestation.patientPaid > 0
-        ? attestation.patientPaid.toFixed(2)
-        : attestation.totalAmount.toFixed(2);
+        ? String(attestation.patientPaid)
+        : "0";
     case "cachet":
       return [
-        `${practitioner.firstName} ${practitioner.lastName}`,
-        `INAMI: ${practitioner.inamiNumber}`,
-        `${practitioner.address}`,
-        `${practitioner.postalCode} ${practitioner.city}`,
+        `${practitioner.lastName.toUpperCase()} ${practitioner.firstName}`,
+        practitioner.inamiNumber,
       ]
         .filter(Boolean)
         .join("\n");
     case "bce":
       return practitioner.bceNumber || attestation.receiptText;
-    default: {
-      const match = fieldId.match(/^service-([lr])(\d+)-(date|code)$/);
-      if (match) {
-        const slot = serviceSlotIndex(fieldId);
-        const s = attestation.services[slot];
-        if (!s?.used) return "";
-        return match[3] === "date" ? s.date : s.code;
-      }
+    default:
       return "";
-    }
   }
+}
+
+export function getServiceCell(
+  slot: number,
+  attestation: {
+    services: Array<{ code: string; date: string; amount: number; used: boolean }>;
+  },
+  showPlaceholders = false,
+): { date: string; code: string } {
+  const s = attestation.services[slot];
+  if (!s?.used) {
+    return showPlaceholders
+      ? { date: "xxxxxxxxxx", code: "xxxxxx" }
+      : { date: "", code: "" };
+  }
+  return { date: s.date, code: s.code };
+}
+
+/** @deprecated compatibilité */
+export const ATTESTATION_FIELDS = STATIC_FIELDS;
+export const FORM_IMAGE_WIDTH_PX = 1500;
+export const FORM_IMAGE_HEIGHT_PX = 3600;
+
+export function serviceSlotIndexFromFieldId(fieldId: string): number {
+  const match = fieldId.match(/^service-([lr])(\d+)-(date|code)$/);
+  if (!match) return -1;
+  return serviceSlotIndex(match[1] as "l" | "r", parseInt(match[2]));
 }

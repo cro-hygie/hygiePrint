@@ -131,7 +131,7 @@
 
 @media print {
   @page {
-    size: 241mm 578mm;
+    size: 241mm 261mm;
     margin: 0;
   }
 
@@ -154,6 +154,20 @@
     position: absolute;
     left: 0;
     top: 0;
+  }
+
+  .certificate-page {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .certificate-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .certificate-perforation {
+    display: none !important;
   }
 
   .attestation-sheet,

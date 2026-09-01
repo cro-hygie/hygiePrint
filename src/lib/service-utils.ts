@@ -54,11 +54,7 @@ export function addService(
   defaults: Partial<ServiceLine> = {},
 ): ServiceLine[] {
   const next = normalizeServices(services);
-  const freeIndex =
-    next.findIndex((s, i) => !s.used && i % 2 === 0) ??
-    -1;
-  const index =
-    freeIndex >= 0 ? freeIndex : next.findIndex((s) => !s.used);
+  const index = next.findIndex((s) => !s.used);
   if (index === -1) return next;
 
   next[index] = {

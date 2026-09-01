@@ -179,8 +179,8 @@ export function AttestationForm({ settings, onChange }: AttestationFormProps) {
           <div>
             <CardTitle>Prestations / soins</CardTitle>
             <CardDescription>
-              Jusqu&apos;à {SERVICE_SLOT_COUNT} lignes (colonne gauche puis
-              droite du carnet). Code kiné courant : 567011.
+              Colonne gauche (lignes 1–10) puis colonne droite (11–20), comme
+              hygie-soft. Code kiné courant : 567011.
             </CardDescription>
           </div>
           <Button
@@ -325,6 +325,16 @@ export function AttestationForm({ settings, onChange }: AttestationFormProps) {
               onChange={(e) =>
                 updateAttestation({ prescriberInami: e.target.value })
               }
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Référence facture</Label>
+            <Input
+              value={attestation.invoiceRef}
+              onChange={(e) =>
+                updateAttestation({ invoiceRef: e.target.value })
+              }
+              placeholder="Ref: 2026-2873"
             />
           </div>
           <div className="space-y-2">

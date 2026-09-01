@@ -168,7 +168,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
           {mode === "attestation"
-            ? "Le PDF d'impression reprend exactement l'aperçu (texte seul). Utilisez « PDF contrôle (avec scan) » pour vérifier l'alignement sur papier blanc avant d'imprimer sur le carnet."
+            ? "Layout calibré sur hygie-soft (2 pages : attestation + reçu). PDF contrôle = avec scan et lignes x pour calibrer. PDF impression = texte seul."
             : simulatePaper
               ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
               : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}

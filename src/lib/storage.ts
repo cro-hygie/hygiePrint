@@ -36,6 +36,9 @@ export function loadSettings(): AppSettings {
           prescriberInami:
             parsed.attestation?.prescriberInami ??
             DEFAULT_SETTINGS.attestation.prescriberInami,
+          invoiceRef:
+            parsed.attestation?.invoiceRef ??
+            DEFAULT_SETTINGS.attestation.invoiceRef,
           services: normalizeServices(
             parsed.attestation?.services ??
               DEFAULT_SETTINGS.attestation.services,
