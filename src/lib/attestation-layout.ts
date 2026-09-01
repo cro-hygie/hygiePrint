@@ -10,8 +10,8 @@ export const FORM_HEIGHT_MM = Math.round(
   (FORM_WIDTH_MM * FORM_IMAGE_HEIGHT_PX) / FORM_IMAGE_WIDTH_PX,
 ); // 578 mm
 
-/** Décalage vertical : le texte s'aligne sur les pointillés (baseline au-dessus de la ligne). */
-const BASELINE_OFFSET_PX = 12;
+/** Texte posé juste au-dessus des pointillés. */
+const BASELINE_OFFSET_PX = 9;
 
 export interface FieldPosition {
   id: string;
@@ -22,12 +22,11 @@ export interface FieldPosition {
   fontSize?: string;
 }
 
-/** Convertit des coordonnées pixel du scan en mm. */
 function fromPx(
   x: number,
   y: number,
   widthPx?: number,
-  fontSize = "8pt",
+  fontSize = "7pt",
 ): Pick<FieldPosition, "top" | "left" | "width" | "fontSize"> {
   const adjustedY = y - BASELINE_OFFSET_PX;
   return {
@@ -40,9 +39,9 @@ function fromPx(
   };
 }
 
-/** 10 lignes × 2 colonnes — centres de cellules mesurés sur le scan */
+/** 10 lignes — centres de cellules mesurés sur le scan */
 const SERVICE_ROW_Y_PX = [
-  744, 795, 852, 918, 969, 1020, 1071, 1122, 1173, 1224,
+  744, 797, 850, 904, 957, 1010, 1064, 1117, 1170, 1224,
 ];
 
 const SERVICE_ROWS = 10;
@@ -50,8 +49,8 @@ const SERVICE_ROWS = 10;
 function buildServiceFields(): FieldPosition[] {
   const fields: FieldPosition[] = [];
   const blocks = [
-    { dateX: 195, codeX: 365, prefix: "l" },
-    { dateX: 795, codeX: 965, prefix: "r" },
+    { dateX: 200, codeX: 360, prefix: "l" },
+    { dateX: 800, codeX: 960, prefix: "r" },
   ];
 
   for (let row = 0; row < SERVICE_ROWS; row++) {
@@ -62,12 +61,12 @@ function buildServiceFields(): FieldPosition[] {
         {
           id: `service-${block.prefix}${n}-date`,
           label: `Date ${block.prefix.toUpperCase()}${n}`,
-          ...fromPx(block.dateX, y, 130),
+          ...fromPx(block.dateX, y, 120, "7pt"),
         },
         {
           id: `service-${block.prefix}${n}-code`,
           label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
-          ...fromPx(block.codeX, y, 150),
+          ...fromPx(block.codeX, y, 140, "7pt"),
         },
       );
     }
@@ -79,73 +78,73 @@ export const ATTESTATION_FIELDS: FieldPosition[] = [
   {
     id: "patient-full-header",
     label: "Nom et prénom (en-tête)",
-    ...fromPx(300, 290, 1020, "9pt"),
+    ...fromPx(283, 290, 970, "8pt"),
   },
   {
     id: "mutuelle-header",
     label: "Organisme assureur",
-    ...fromPx(300, 312, 1020, "9pt"),
+    ...fromPx(280, 312, 1020, "8pt"),
   },
   {
     id: "niss-header",
     label: "NISS",
-    ...fromPx(185, 346, 380, "9pt"),
+    ...fromPx(280, 346, 300, "8pt"),
   },
   {
     id: "patient-address",
     label: "Adresse patient",
-    ...fromPx(560, 362, 780, "8pt"),
+    ...fromPx(582, 362, 730, "7pt"),
   },
   {
     id: "patient-full-main",
     label: "Nom et prénom (corps)",
-    ...fromPx(300, 412, 1020, "9pt"),
+    ...fromPx(286, 412, 1020, "8pt"),
   },
   ...buildServiceFields(),
   {
     id: "prescriber-name",
     label: "Prescrit par",
-    ...fromPx(300, 1962, 520),
+    ...fromPx(300, 1962, 480, "7pt"),
   },
   {
     id: "prescriber-date",
     label: "Date prescription",
-    ...fromPx(650, 2012, 200),
+    ...fromPx(650, 2012, 180, "7pt"),
   },
   {
     id: "prescriber-inami",
     label: "INAMI prescripteur",
-    ...fromPx(300, 2061, 900),
+    ...fromPx(300, 2055, 880, "7pt"),
   },
   {
     id: "cachet",
     label: "Identification dispensateur",
-    ...fromPx(180, 2149, 620, "7pt"),
+    ...fromPx(180, 2098, 600, "6pt"),
   },
   {
     id: "total",
     label: "Montant total EUR",
-    ...fromPx(950, 2111, 120, "9pt"),
+    ...fromPx(950, 2111, 100, "8pt"),
   },
   {
     id: "attestation-date",
     label: "Date attestation",
-    ...fromPx(900, 2242, 200),
+    ...fromPx(900, 2227, 180, "7pt"),
   },
   {
     id: "bce",
     label: "N° BCE",
-    ...fromPx(300, 2980, 350),
+    ...fromPx(300, 2981, 340, "7pt"),
   },
   {
     id: "receipt-amount",
     label: "Montant reçu EUR",
-    ...fromPx(300, 3012, 350, "9pt"),
+    ...fromPx(300, 3001, 340, "8pt"),
   },
   {
     id: "receipt-date",
     label: "Date reçu",
-    ...fromPx(900, 3032, 200),
+    ...fromPx(900, 3030, 180, "7pt"),
   },
 ];
 

@@ -179,8 +179,8 @@ export function AttestationForm({ settings, onChange }: AttestationFormProps) {
           <div>
             <CardTitle>Prestations / soins</CardTitle>
             <CardDescription>
-              Jusqu&apos;à {SERVICE_SLOT_COUNT} lignes sur le carnet (2 colonnes
-              × 10 lignes). Code kiné courant : 567011.
+              Jusqu&apos;à {SERVICE_SLOT_COUNT} lignes (colonne gauche puis
+              droite du carnet). Code kiné courant : 567011.
             </CardDescription>
           </div>
           <Button

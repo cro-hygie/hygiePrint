@@ -54,10 +54,14 @@ export function addService(
   defaults: Partial<ServiceLine> = {},
 ): ServiceLine[] {
   const next = normalizeServices(services);
-  const freeIndex = next.findIndex((s) => !s.used);
-  if (freeIndex === -1) return next;
+  const freeIndex =
+    next.findIndex((s, i) => !s.used && i % 2 === 0) ??
+    -1;
+  const index =
+    freeIndex >= 0 ? freeIndex : next.findIndex((s) => !s.used);
+  if (index === -1) return next;
 
-  next[freeIndex] = {
+  next[index] = {
     code: defaults.code ?? "567011",
     date: defaults.date ?? "",
     amount: defaults.amount ?? 25.5,

@@ -10,7 +10,32 @@ export const DEMO_PRACTITIONER = {
   phone: "+32 4 223 18 40",
 };
 
-/** Séances kiné — 6 prestations sur 16 emplacements (semaine type). */
+/** 6 séances kiné — colonne gauche du carnet (l1 à l6). */
+function buildDemoServices() {
+  const sessions = [
+    { code: "567011", date: "02/09", amount: 25.5 },
+    { code: "567011", date: "04/09", amount: 25.5 },
+    { code: "567011", date: "09/09", amount: 25.5 },
+    { code: "567011", date: "11/09", amount: 25.5 },
+    { code: "567011", date: "16/09", amount: 25.5 },
+    { code: "567011", date: "18/09", amount: 25.5 },
+  ];
+
+  const services = Array.from({ length: 20 }, () => ({
+    code: "",
+    date: "",
+    amount: 0,
+    used: false,
+  }));
+
+  // Slots pairs : l1=0, l2=2, l3=4… (colonne gauche uniquement)
+  sessions.forEach((s, i) => {
+    services[i * 2] = { ...s, used: true };
+  });
+
+  return services;
+}
+
 export const DEMO_ATTESTATION = {
   patient: {
     lastName: "Henrard",
@@ -19,20 +44,7 @@ export const DEMO_ATTESTATION = {
     mutuelle: "Partenamut",
     address: "Rue des Wallons 42, 4000 Liège",
   },
-  services: [
-    { code: "567011", date: "02/09", amount: 25.5, used: true },
-    { code: "567011", date: "04/09", amount: 25.5, used: true },
-    { code: "567011", date: "09/09", amount: 25.5, used: true },
-    { code: "567011", date: "11/09", amount: 25.5, used: true },
-    { code: "567011", date: "16/09", amount: 25.5, used: true },
-    { code: "567011", date: "18/09", amount: 25.5, used: true },
-    ...Array.from({ length: 14 }, () => ({
-      code: "",
-      date: "",
-      amount: 0,
-      used: false,
-    })),
-  ],
+  services: buildDemoServices(),
   totalAmount: 153.0,
   patientPaid: 45.9,
   attestationDate: "18/09/2026",

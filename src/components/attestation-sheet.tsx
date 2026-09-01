@@ -36,8 +36,8 @@ export function AttestationSheet({
         width: `${FORM_WIDTH_MM}mm`,
         height: `${FORM_HEIGHT_MM}mm`,
         fontFamily: "Courier New, Courier, monospace",
-        fontSize: "9pt",
-        lineHeight: 1.15,
+        fontSize: "8pt",
+        lineHeight: 1.1,
       }}
     >
       {simulatePaper && <FormTemplateBackground />}
@@ -96,7 +96,9 @@ export function AttestationSheet({
         return (
           <div
             key={field.id}
-            className={`absolute whitespace-pre-wrap z-10`}
+            className={`absolute z-10 ${
+              field.id === "cachet" ? "whitespace-pre-wrap" : "whitespace-nowrap"
+            }`}
             style={{
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,
