@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, type AppSettings } from "./types";
 
-const STORAGE_KEY = "attestprint-be-settings";
+const STORAGE_KEY = "hygieprint-settings";
 
 export function loadSettings(): AppSettings {
   if (typeof window === "undefined") return DEFAULT_SETTINGS;

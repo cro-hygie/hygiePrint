@@ -29,7 +29,7 @@ export function TestPage({
     >
       {simulatePaper && <FormTemplateBackground profession={profession} />}
       <div className="absolute left-2 top-2 z-10 text-xs font-bold">
-        PAGE DE TEST — AttestPrint BE
+        PAGE DE TEST — hygiePrint
       </div>
       <div className="absolute right-2 top-2 z-10 text-xs">
         Marge X: {marginX} mm | Marge Y: {marginY} mm

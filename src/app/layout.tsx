@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AttestPrint BE — Imprimante matricielle santé Belgique",
+  title: "hygiePrint — Imprimante matricielle santé Belgique",
   description:
     "Configuration et calibration d'imprimantes matricielles pour attestations de soins — médecins et kinésithérapeutes belges.",
 };

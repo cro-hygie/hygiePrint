@@ -26,5 +26,5 @@ export async function exportElementToPdf(
 
 export function pdfFilename(prefix: string): string {
   const date = new Date().toISOString().slice(0, 10);
-  return `attestprint-${prefix}-${date}.pdf`;
+  return `hygieprint-${prefix}-${date}.pdf`;
 }

@@ -24,7 +24,7 @@ const STEPS = [
   {
     title: "Installer le pilote",
     description:
-      "Installez le pilote officiel du fabricant. Vérifiez que l'imprimante est visible dans les périphériques Windows/Mac avant de configurer CareConnect, KineQuick ou AttestPrint.",
+      "Installez le pilote officiel du fabricant. Vérifiez que l'imprimante est visible dans les périphériques Windows/Mac avant de configurer CareConnect, KineQuick ou hygiePrint.",
   },
   {
     title: "Format « Std plié allemand »",

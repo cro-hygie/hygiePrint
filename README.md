@@ -1,6 +1,8 @@
-# AttestPrint BE
+# hygiePrint
 
 Outil web pour **médecins et kinésithérapeutes belges** qui utilisent une **imprimante matricielle** (EPSON, OKI…) pour imprimer des **attestations de soins** sur formulaires pré-imprimés.
+
+**Dépôt :** https://github.com/cro-hygie/hygiePrint
 
 ## Installation locale
 
@@ -12,8 +14,8 @@ Outil web pour **médecins et kinésithérapeutes belges** qui utilisent une **i
 ### 1. Cloner le projet
 
 ```bash
-git clone <url-de-votre-repo> attestprint-be
-cd attestprint-be
+git clone https://github.com/cro-hygie/hygiePrint.git
+cd hygiePrint
 ```
 
 ### 2. Installer les dépendances
@@ -75,7 +77,7 @@ Même URL : http://localhost:43123
 | Médecins / dentistes | Depuis sept. 2025 | Cas exceptionnels |
 | Kinésithérapeutes | Janv. 2027 | Encore possible (ex. sans réseau) |
 
-Les logiciels métier (CareConnect, KineQuick…) gèrent la tarification INAMI ; **AttestPrint BE** complète leur usage en aidant à **calibrer l'imprimante** quand l'alignement est décalé.
+Les logiciels métier (CareConnect, KineQuick…) gèrent la tarification INAMI ; **hygiePrint** complète leur usage en aidant à **calibrer l'imprimante** quand l'alignement est décalé.
 
 ## Impression (avec imprimante matricielle)
 

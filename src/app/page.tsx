@@ -25,7 +25,7 @@ export default function HomePage() {
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
           <Printer className="size-8 text-primary" />
-          <h1 className="text-3xl font-bold tracking-tight">AttestPrint BE</h1>
+          <h1 className="text-3xl font-bold tracking-tight">hygiePrint</h1>
           <Badge variant="secondary">Belgique</Badge>
         </div>
         <p className="max-w-2xl text-muted-foreground">
