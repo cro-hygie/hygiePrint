@@ -30,6 +30,38 @@ function pos(
   };
 }
 
+const SERVICE_ROWS = 9;
+
+function buildServiceFields(): FieldPosition[] {
+  const fields: FieldPosition[] = [];
+  const rowStartPct = 13.8;
+  const rowStepPct = 2.25;
+  const blocks = [
+    { dateLeftPct: 7, codeLeftPct: 21, prefix: "l" },
+    { dateLeftPct: 51, codeLeftPct: 65, prefix: "r" },
+  ];
+
+  for (let row = 0; row < SERVICE_ROWS; row++) {
+    for (const block of blocks) {
+      const n = row + 1;
+      const topPct = rowStartPct + row * rowStepPct;
+      fields.push(
+        {
+          id: `service-${block.prefix}${n}-date`,
+          label: `Date ${block.prefix.toUpperCase()}${n}`,
+          ...pos(topPct, block.dateLeftPct, 11),
+        },
+        {
+          id: `service-${block.prefix}${n}-code`,
+          label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
+          ...pos(topPct, block.codeLeftPct, 14),
+        },
+      );
+    }
+  }
+  return fields;
+}
+
 export const ATTESTATION_FIELDS: FieldPosition[] = [
   // --- En-tête patient ---
   {
@@ -114,38 +146,6 @@ export const ATTESTATION_FIELDS: FieldPosition[] = [
     ...pos(74.5, 62, 14),
   },
 ];
-
-const SERVICE_ROWS = 9;
-
-function buildServiceFields(): FieldPosition[] {
-  const fields: FieldPosition[] = [];
-  const rowStartPct = 13.8;
-  const rowStepPct = 2.25;
-  const blocks = [
-    { dateLeftPct: 7, codeLeftPct: 21, prefix: "l" },
-    { dateLeftPct: 51, codeLeftPct: 65, prefix: "r" },
-  ];
-
-  for (let row = 0; row < SERVICE_ROWS; row++) {
-    for (const block of blocks) {
-      const n = row + 1;
-      const topPct = rowStartPct + row * rowStepPct;
-      fields.push(
-        {
-          id: `service-${block.prefix}${n}-date`,
-          label: `Date ${block.prefix.toUpperCase()}${n}`,
-          ...pos(topPct, block.dateLeftPct, 11),
-        },
-        {
-          id: `service-${block.prefix}${n}-code`,
-          label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
-          ...pos(topPct, block.codeLeftPct, 14),
-        },
-      );
-    }
-  }
-  return fields;
-}
 
 export const SERVICE_SLOT_COUNT = SERVICE_ROWS * 2;
 
