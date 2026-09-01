@@ -6,9 +6,10 @@ import {
   FORM_WIDTH_MM,
   PAGE1_HEIGHT_MM,
   PAGE2_HEIGHT_MM,
+  PERFORATION_MM,
 } from "@/lib/attestation-layout";
 
-/** Scan G11 — partie haute (page 1 attestation). */
+/** Scan G11 page 1 — haut du formulaire (0 → perforation), échelle 1:1 mm. */
 export function FormTemplateBackground() {
   return (
     <div
@@ -27,13 +28,13 @@ export function FormTemplateBackground() {
         draggable={false}
       />
       <div className="absolute bottom-1 right-2 z-10 text-[6pt] text-gray-400 opacity-60">
-        {FORM_MODEL} — attestation
+        {FORM_MODEL} — attestation ({PAGE1_HEIGHT_MM} mm)
       </div>
     </div>
   );
 }
 
-/** Scan G11 — partie basse (page 2 reçu, après perforation). */
+/** Scan G11 page 2 — bas du formulaire (après perforation), échelle 1:1 mm. */
 export function FormReceiptBackground() {
   return (
     <div
@@ -48,7 +49,7 @@ export function FormReceiptBackground() {
           width: `${FORM_WIDTH_MM}mm`,
           height: `${FORM_HEIGHT_MM}mm`,
           display: "block",
-          marginTop: `-${PAGE1_HEIGHT_MM}mm`,
+          marginTop: `-${PERFORATION_MM}mm`,
         }}
         draggable={false}
       />

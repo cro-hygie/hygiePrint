@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import {
-  CONTENT_WIDTH_MM,
   FONT_BODY,
   FONT_TABLE,
   FORM_WIDTH_MM,
@@ -10,17 +9,22 @@ import {
   getServiceCell,
   PAGE1_HEIGHT_MM,
   PAGE2_HEIGHT_MM,
+  PERFORATION_MM,
+  SERVICE_CODE_X,
+  SERVICE_DATE_X,
   SERVICE_ROWS,
+  serviceRowTopMm,
   serviceSlotIndex,
   STATIC_FIELDS,
-  TABLE_COL_RIGHT_OFFSET_MM,
   TABLE_LEFT_MM,
-  TABLE_ROW_HEIGHT_MM,
   TABLE_SPAN_WIDTH_MM,
   TABLE_TOP_MM,
 } from "@/lib/attestation-layout";
 import type { AppSettings } from "@/lib/types";
-import { FormReceiptBackground, FormTemplateBackground } from "@/components/form-template";
+import {
+  FormReceiptBackground,
+  FormTemplateBackground,
+} from "@/components/form-template";
 
 interface AttestationSheetProps {
   settings: AppSettings;
@@ -79,33 +83,50 @@ function ServiceTable({
     <div
       className="inline-block align-top"
       style={{
-        marginLeft: column === "r" ? `${TABLE_COL_RIGHT_OFFSET_MM}mm` : undefined,
+        marginLeft:
+          column === "r"
+            ? `${SERVICE_DATE_X.r - SERVICE_DATE_X.l}mm`
+            : undefined,
       }}
     >
       {Array.from({ length: SERVICE_ROWS }, (_, i) => {
         const slot = serviceSlotIndex(column, i + 1);
-        const { date, code } = getServiceCell(slot, attestation, showPlaceholders);
-        const used = attestation.services[slot]?.used;
+        const { date, code } = getServiceCell(
+          slot,
+          attestation,
+          showPlaceholders,
+        );
+        const rowTop = serviceRowTopMm(i);
+        const rowHeight =
+          i < SERVICE_ROWS - 1
+            ? serviceRowTopMm(i + 1) - rowTop
+            : 8.5;
         return (
           <div
             key={`${column}-${i}`}
-            style={{ height: `${TABLE_ROW_HEIGHT_MM}mm`, overflow: "hidden" }}
+            className="relative"
+            style={{ height: `${rowHeight}mm` }}
           >
             <span
-              className="inline-block"
-              style={{ width: `${TABLE_SPAN_WIDTH_MM}mm` }}
+              className="absolute inline-block whitespace-nowrap"
+              style={{
+                top: 0,
+                left: `${SERVICE_DATE_X[column] - TABLE_LEFT_MM}mm`,
+                width: `${TABLE_SPAN_WIDTH_MM}mm`,
+              }}
             >
               {date}
             </span>
             <span
-              className="inline-block"
-              style={{ width: `${TABLE_SPAN_WIDTH_MM}mm` }}
+              className="absolute inline-block whitespace-nowrap"
+              style={{
+                top: 0,
+                left: `${SERVICE_CODE_X[column] - TABLE_LEFT_MM}mm`,
+                width: `${TABLE_SPAN_WIDTH_MM}mm`,
+              }}
             >
               {code}
             </span>
-            {!used && (
-              <span className="sr-only">ligne vide</span>
-            )}
           </div>
         );
       })}
@@ -248,7 +269,8 @@ export function AttestationSheet({
         heightMm={PAGE1_HEIGHT_MM}
       />
       <div
-        className="certificate-perforation border-t border-dashed border-gray-300 print:border-none"
+        className="certificate-perforation pdf-exclude border-t border-dashed border-gray-400 print:border-none"
+        style={{ width: `${FORM_WIDTH_MM}mm` }}
         aria-hidden
       />
       <CertificatePage
@@ -265,4 +287,4 @@ export function AttestationSheet({
   );
 }
 
-export { CONTENT_WIDTH_MM };
+export { PERFORATION_MM };
