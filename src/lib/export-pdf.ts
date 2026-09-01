@@ -19,6 +19,35 @@ async function waitForImages(element: HTMLElement): Promise<void> {
   );
 }
 
+/** Retire les CSS Tailwind (oklch/lab) qui font planter html2canvas. */
+function sanitizeCloneForExport(clonedDoc: Document): void {
+  clonedDoc
+    .querySelectorAll('style, link[rel="stylesheet"]')
+    .forEach((node) => node.remove());
+
+  const safeStyle = clonedDoc.createElement("style");
+  safeStyle.textContent = `
+    * {
+      color: #000000 !important;
+      background-color: transparent !important;
+      border-color: #cccccc !important;
+      outline-color: #000000 !important;
+      box-shadow: none !important;
+    }
+    .attestation-sheet, .test-page {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+    img {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: fill !important;
+    }
+  `;
+  clonedDoc.head.appendChild(safeStyle);
+}
+
 export async function exportElementToPdf(
   element: HTMLElement,
   filename: string,
@@ -31,7 +60,6 @@ export async function exportElementToPdf(
     throw new Error("La zone d'export est vide — rechargez la page.");
   }
 
-  // Limite navigateur ~8192 px — scale adaptatif pour le formulaire long (578 mm)
   const maxCanvasDim = 8192;
   const scale = Math.min(2, maxCanvasDim / Math.max(width, height));
 
@@ -44,7 +72,8 @@ export async function exportElementToPdf(
     imageTimeout: 20000,
     width,
     height,
-    onclone: (_doc, clone) => {
+    onclone: (clonedDoc, clone) => {
+      sanitizeCloneForExport(clonedDoc);
       clone.querySelectorAll("img").forEach((img) => {
         img.style.display = "block";
       });
@@ -59,7 +88,16 @@ export async function exportElementToPdf(
   });
 
   const imgData = canvas.toDataURL("image/jpeg", 0.95);
-  pdf.addImage(imgData, "JPEG", 0, 0, FORM_WIDTH_MM, FORM_HEIGHT_MM, undefined, "FAST");
+  pdf.addImage(
+    imgData,
+    "JPEG",
+    0,
+    0,
+    FORM_WIDTH_MM,
+    FORM_HEIGHT_MM,
+    undefined,
+    "FAST",
+  );
   pdf.save(filename);
 }
 

@@ -49,7 +49,7 @@ export function AttestationSheet({
               style={{ left: `${i * 10}mm` }}
             />
           ))}
-          {Array.from({ length: 58 }).map((_, i) => (
+          {Array.from({ length: 33 }).map((_, i) => (
             <div
               key={`h-${i}`}
               className="absolute left-0 right-0 border-t border-blue-400"

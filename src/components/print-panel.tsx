@@ -156,7 +156,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">
             {mode === "attestation"
-              ? "Votre formulaire Mod. G11 FR *15*"
+              ? "Votre formulaire Mod. G11 FR *17*"
               : "Mode simulation (sans imprimante)"}
           </CardTitle>
           <CardDescription>
