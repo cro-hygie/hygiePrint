@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
         <p className="max-w-2xl text-muted-foreground">
           Calibration d&apos;impression pour le formulaire belge{" "}
-          <strong>Mod. G11 FR *17*</strong> — Attestation de soins donnés —
+          <strong>Mod. G11 FR</strong> — Attestation de soins donnés —
           Epson LX-350.
         </p>
       </header>

@@ -13,6 +13,7 @@ import { FormTemplateBackground } from "@/components/form-template";
 interface AttestationSheetProps {
   settings: AppSettings;
   showGrid?: boolean;
+  showFieldMarkers?: boolean;
   simulatePaper?: boolean;
   className?: string;
 }
@@ -20,6 +21,7 @@ interface AttestationSheetProps {
 export function AttestationSheet({
   settings,
   showGrid = false,
+  showFieldMarkers = false,
   simulatePaper = false,
   className = "",
 }: AttestationSheetProps) {
@@ -58,6 +60,21 @@ export function AttestationSheet({
           ))}
         </div>
       )}
+
+      {showFieldMarkers &&
+        ATTESTATION_FIELDS.map((field) => (
+          <div
+            key={`marker-${field.id}`}
+            className="pointer-events-none absolute z-30"
+            style={{
+              top: `${field.top + offsetY}mm`,
+              left: `${field.left + offsetX}mm`,
+            }}
+            title={field.label}
+          >
+            <span className="block size-1.5 rounded-full bg-red-500 ring-1 ring-red-700" />
+          </div>
+        ))}
 
       {ATTESTATION_FIELDS.map((field) => {
         const value = getFieldValue(

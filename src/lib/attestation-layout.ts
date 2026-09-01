@@ -1,11 +1,17 @@
 /**
- * Modèle G11 FR *17* — Attestation de soins donnés (Belgique)
- * Fond : scan officiel propre public/forms/mod-g11-fr.png (1500×3600 px)
- * Papier continu Std plié allemand — 241 mm de large.
+ * Modèle G11 FR — Attestation de soins donnés (Belgique)
+ * Positions calibrées sur le scan public/forms/mod-g11-fr.png (1500×3600 px).
  */
-export const FORM_MODEL = "G11-FR *17*";
+export const FORM_MODEL = "G11-FR";
+export const FORM_IMAGE_WIDTH_PX = 1500;
+export const FORM_IMAGE_HEIGHT_PX = 3600;
 export const FORM_WIDTH_MM = 241;
-export const FORM_HEIGHT_MM = Math.round((FORM_WIDTH_MM * 3600) / 1500); // 578 mm
+export const FORM_HEIGHT_MM = Math.round(
+  (FORM_WIDTH_MM * FORM_IMAGE_HEIGHT_PX) / FORM_IMAGE_WIDTH_PX,
+); // 578 mm
+
+/** Décalage vertical : le texte s'aligne sur les pointillés (baseline au-dessus de la ligne). */
+const BASELINE_OFFSET_PX = 12;
 
 export interface FieldPosition {
   id: string;
@@ -16,45 +22,52 @@ export interface FieldPosition {
   fontSize?: string;
 }
 
-function pos(
-  topPct: number,
-  leftPct: number,
-  widthPct?: number,
+/** Convertit des coordonnées pixel du scan en mm. */
+function fromPx(
+  x: number,
+  y: number,
+  widthPx?: number,
   fontSize = "8pt",
 ): Pick<FieldPosition, "top" | "left" | "width" | "fontSize"> {
+  const adjustedY = y - BASELINE_OFFSET_PX;
   return {
-    top: (FORM_HEIGHT_MM * topPct) / 100,
-    left: (FORM_WIDTH_MM * leftPct) / 100,
-    width: widthPct ? (FORM_WIDTH_MM * widthPct) / 100 : undefined,
+    top: (adjustedY / FORM_IMAGE_HEIGHT_PX) * FORM_HEIGHT_MM,
+    left: (x / FORM_IMAGE_WIDTH_PX) * FORM_WIDTH_MM,
+    width: widthPx
+      ? (widthPx / FORM_IMAGE_WIDTH_PX) * FORM_WIDTH_MM
+      : undefined,
     fontSize,
   };
 }
 
-const SERVICE_ROWS = 9;
+/** 10 lignes × 2 colonnes — centres de cellules mesurés sur le scan */
+const SERVICE_ROW_Y_PX = [
+  744, 795, 852, 918, 969, 1020, 1071, 1122, 1173, 1224,
+];
+
+const SERVICE_ROWS = 10;
 
 function buildServiceFields(): FieldPosition[] {
   const fields: FieldPosition[] = [];
-  const rowStartPct = 13.8;
-  const rowStepPct = 2.25;
   const blocks = [
-    { dateLeftPct: 7, codeLeftPct: 21, prefix: "l" },
-    { dateLeftPct: 51, codeLeftPct: 65, prefix: "r" },
+    { dateX: 195, codeX: 365, prefix: "l" },
+    { dateX: 795, codeX: 965, prefix: "r" },
   ];
 
   for (let row = 0; row < SERVICE_ROWS; row++) {
+    const y = SERVICE_ROW_Y_PX[row];
     for (const block of blocks) {
       const n = row + 1;
-      const topPct = rowStartPct + row * rowStepPct;
       fields.push(
         {
           id: `service-${block.prefix}${n}-date`,
           label: `Date ${block.prefix.toUpperCase()}${n}`,
-          ...pos(topPct, block.dateLeftPct, 11),
+          ...fromPx(block.dateX, y, 130),
         },
         {
           id: `service-${block.prefix}${n}-code`,
           label: `Nomenclature ${block.prefix.toUpperCase()}${n}`,
-          ...pos(topPct, block.codeLeftPct, 14),
+          ...fromPx(block.codeX, y, 150),
         },
       );
     }
@@ -66,73 +79,73 @@ export const ATTESTATION_FIELDS: FieldPosition[] = [
   {
     id: "patient-full-header",
     label: "Nom et prénom (en-tête)",
-    ...pos(3.2, 20, 72, "9pt"),
+    ...fromPx(300, 290, 1020, "9pt"),
   },
   {
     id: "mutuelle-header",
     label: "Organisme assureur",
-    ...pos(5.0, 20, 72, "9pt"),
+    ...fromPx(300, 312, 1020, "9pt"),
   },
   {
     id: "niss-header",
     label: "NISS",
-    ...pos(6.8, 20, 34, "9pt"),
+    ...fromPx(185, 346, 380, "9pt"),
   },
   {
     id: "patient-address",
     label: "Adresse patient",
-    ...pos(6.8, 55, 38, "8pt"),
+    ...fromPx(560, 362, 780, "8pt"),
   },
   {
     id: "patient-full-main",
     label: "Nom et prénom (corps)",
-    ...pos(10.2, 20, 72, "9pt"),
+    ...fromPx(300, 412, 1020, "9pt"),
   },
   ...buildServiceFields(),
   {
     id: "prescriber-name",
     label: "Prescrit par",
-    ...pos(36.2, 20, 38),
+    ...fromPx(300, 1962, 520),
   },
   {
     id: "prescriber-date",
     label: "Date prescription",
-    ...pos(36.2, 62, 14),
+    ...fromPx(650, 2012, 200),
   },
   {
     id: "prescriber-inami",
     label: "INAMI prescripteur",
-    ...pos(38.2, 20, 55),
+    ...fromPx(300, 2061, 900),
   },
   {
     id: "cachet",
     label: "Identification dispensateur",
-    ...pos(42.5, 6, 40, "7pt"),
+    ...fromPx(180, 2149, 620, "7pt"),
   },
   {
     id: "total",
     label: "Montant total EUR",
-    ...pos(43.5, 80, 12, "9pt"),
+    ...fromPx(950, 2111, 120, "9pt"),
   },
   {
     id: "attestation-date",
     label: "Date attestation",
-    ...pos(50.5, 62, 14),
+    ...fromPx(900, 2242, 200),
   },
   {
     id: "bce",
     label: "N° BCE",
-    ...pos(66.5, 28, 28),
+    ...fromPx(300, 2980, 350),
   },
   {
     id: "receipt-amount",
     label: "Montant reçu EUR",
-    ...pos(70.5, 28, 30, "9pt"),
+    ...fromPx(300, 3012, 350, "9pt"),
   },
   {
     id: "receipt-date",
     label: "Date reçu",
-    ...pos(74.5, 62, 14),
+    ...fromPx(900, 3032, 200),
   },
 ];
 

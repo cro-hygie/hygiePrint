@@ -28,6 +28,7 @@ interface PrintPanelProps {
 export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
   const printAreaRef = useRef<HTMLDivElement>(null);
   const [showGrid, setShowGrid] = useState(false);
+  const [showFieldMarkers, setShowFieldMarkers] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const { attestation, simulatePaper } = settings;
@@ -169,7 +170,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">
             {mode === "attestation"
-              ? "Votre formulaire Mod. G11 FR *17*"
+              ? "Votre formulaire Mod. G11 FR"
               : "Mode simulation (sans imprimante)"}
           </CardTitle>
           <CardDescription>
@@ -194,6 +195,13 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
             <div className="flex items-center gap-2">
               <Switch checked={showGrid} onCheckedChange={setShowGrid} />
               <Label>Grille d&apos;alignement (mm)</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={showFieldMarkers}
+                onCheckedChange={setShowFieldMarkers}
+              />
+              <Label>Marqueurs de champs (points rouges)</Label>
             </div>
           </CardContent>
         )}
@@ -244,6 +252,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
             <AttestationSheet
               settings={settings}
               showGrid={showGrid}
+              showFieldMarkers={showFieldMarkers}
               simulatePaper
             />
           )}

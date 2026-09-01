@@ -8,14 +8,15 @@ import {
 } from "./attestation-layout";
 import type { AppSettings } from "./types";
 
+const MM_TO_PT = 2.83465;
+
 function parseFontSizePt(fontSize?: string): number {
   if (!fontSize) return 8;
   return parseFloat(fontSize.replace("pt", ""));
 }
 
 /**
- * Export PDF texte seul — placement direct en mm (fiable pour carnet pré-imprimé).
- * html2canvas ne gère pas les unités mm → tout finissait en haut à gauche.
+ * Export PDF texte seul — mêmes coordonnées mm que l'aperçu écran.
  */
 export function exportAttestationToPdf(
   settings: AppSettings,
@@ -42,21 +43,21 @@ export function exportAttestationToPdf(
     );
     if (!value) continue;
 
-    const fontSize = parseFontSizePt(field.fontSize);
-    pdf.setFontSize(fontSize);
+    const fontSizePt = parseFontSizePt(field.fontSize);
+    pdf.setFontSize(fontSizePt);
 
     const x = field.left + marginX;
     const y = field.top + marginY;
-    const lineHeightMm = fontSize * 0.3527; // pt → mm
+    const lineHeightMm = (fontSizePt / MM_TO_PT) * 1.15;
     const lines = value.split("\n");
 
     lines.forEach((line, index) => {
-      const baselineY = y + lineHeightMm * (index + 1);
-      if (field.width) {
-        pdf.text(line, x, baselineY, { maxWidth: field.width });
-      } else {
-        pdf.text(line, x, baselineY);
-      }
+      const textY = y + index * lineHeightMm;
+      const options: { maxWidth?: number; baseline?: "top" } = {
+        baseline: "top",
+      };
+      if (field.width) options.maxWidth = field.width;
+      pdf.text(line, x, textY, options);
     });
   }
 
@@ -91,6 +92,7 @@ export async function exportElementToPdf(
         .querySelectorAll('style, link[rel="stylesheet"]')
         .forEach((node) => node.remove());
       clonedDoc.querySelectorAll(".form-scan-background").forEach((node) => node.remove());
+      convertMmToPx(clonedDoc.body);
     },
   });
 
@@ -104,6 +106,30 @@ export async function exportElementToPdf(
   const imgData = canvas.toDataURL("image/jpeg", 0.95);
   pdf.addImage(imgData, "JPEG", 0, 0, FORM_WIDTH_MM, FORM_HEIGHT_MM, undefined, "FAST");
   pdf.save(filename);
+}
+
+/** Convertit les styles mm → px pour html2canvas (calibration). */
+function convertMmToPx(root: HTMLElement): void {
+  const pxPerMm = 3.7795275591;
+  root.querySelectorAll<HTMLElement>("*").forEach((el) => {
+    const style = el.style;
+    for (const prop of ["top", "left", "width", "height"] as const) {
+      const val = style[prop];
+      if (val.endsWith("mm")) {
+        const mm = parseFloat(val);
+        style[prop] = `${mm * pxPerMm}px`;
+      }
+    }
+    if (style.fontSize.endsWith("pt")) {
+      const pt = parseFloat(style.fontSize);
+      style.fontSize = `${pt * (pxPerMm / MM_TO_PT)}px`;
+    }
+  });
+  const sheet = root.querySelector<HTMLElement>(".attestation-sheet, .test-page");
+  if (sheet) {
+    sheet.style.width = `${FORM_WIDTH_MM * pxPerMm}px`;
+    sheet.style.height = `${FORM_HEIGHT_MM * pxPerMm}px`;
+  }
 }
 
 export function pdfFilename(prefix: string): string {
