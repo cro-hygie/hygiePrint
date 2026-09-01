@@ -28,6 +28,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
   const printAreaRef = useRef<HTMLDivElement>(null);
   const [showGrid, setShowGrid] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const { attestation, simulatePaper } = settings;
 
   const handlePrint = () => {
@@ -37,9 +38,14 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
   const handleExportPdf = async () => {
     if (!printAreaRef.current) return;
     setExporting(true);
+    setExportError(null);
     try {
       const prefix = mode === "test" ? "calibration" : "attestation";
       await exportElementToPdf(printAreaRef.current, pdfFilename(prefix));
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "L'export PDF a échoué.";
+      setExportError(message);
     } finally {
       setExporting(false);
     }
@@ -198,6 +204,12 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         </Button>
       </div>
 
+      {exportError && (
+        <p className="text-sm text-destructive" role="alert">
+          {exportError}
+        </p>
+      )}
+
       <div className="overflow-x-auto rounded-lg border bg-muted/30 p-4 print:border-none print:bg-white print:p-0">
         <div
           ref={printAreaRef}
@@ -222,7 +234,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
           {mode === "attestation"
-            ? "Fond : votre scan Mod. G11 FR *15* (mod-g11-fr.png). Si l'image ne s'affiche pas, vérifiez que le fichier public/forms/mod-g11-fr.png est bien présent après git pull."
+            ? "Exportez en PDF pour archiver ou imprimer depuis Adobe/aperçu. Le fichier inclut le scan G11 + le texte positionné."
             : simulatePaper
               ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
               : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}
