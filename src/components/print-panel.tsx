@@ -148,28 +148,36 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
 
       <Card className="border-dashed">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Mode simulation (sans imprimante)</CardTitle>
+          <CardTitle className="text-base">
+            {mode === "attestation"
+              ? "Votre formulaire Mod. G11 FR *15*"
+              : "Mode simulation (sans imprimante)"}
+          </CardTitle>
           <CardDescription>
-            Superposez le texte sur un formulaire pré-imprimé simulé, puis
-            exportez en PDF pour archiver vos réglages avant le test réel.
+            {mode === "attestation"
+              ? "Le scan que vous avez envoyé sert de fond. Ajustez les marges X/Y pour aligner le texte sur les pointillés."
+              : "Superposez la page de test sur le formulaire pour calibrer l'imprimante."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={simulatePaper}
-              onCheckedChange={(v) => onChange({ simulatePaper: v })}
-            />
-            <Label>Formulaire pré-imprimé simulé</Label>
-          </div>
-
-          {mode === "attestation" && (
+        {mode === "test" && (
+          <CardContent className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={simulatePaper}
+                onCheckedChange={(v) => onChange({ simulatePaper: v })}
+              />
+              <Label>Afficher le scan du formulaire G11</Label>
+            </div>
+          </CardContent>
+        )}
+        {mode === "attestation" && (
+          <CardContent className="flex flex-wrap items-center gap-6">
             <div className="flex items-center gap-2">
               <Switch checked={showGrid} onCheckedChange={setShowGrid} />
               <Label>Grille d&apos;alignement (mm)</Label>
             </div>
-          )}
-        </CardContent>
+          </CardContent>
+        )}
       </Card>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -204,7 +212,7 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
             <AttestationSheet
               settings={settings}
               showGrid={showGrid}
-              simulatePaper={simulatePaper}
+              simulatePaper
             />
           )}
         </div>
@@ -213,9 +221,11 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
       <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
         <FileText className="mt-0.5 size-4 shrink-0" />
         <p>
-          {simulatePaper
-            ? "Le fond simule un carnet pré-imprimé belge. Ajustez les marges dans Configuration jusqu'à ce que le texte tombe dans les cases. Exportez le PDF pour comparer plus tard avec l'impression réelle."
-            : "Activez la simulation pour visualiser l'alignement sur un formulaire pré-imprimé sans avoir l'imprimante sous la main."}
+          {mode === "attestation"
+            ? "Fond : votre scan Mod. G11 FR *15* (mod-g11-fr.png). Si l'image ne s'affiche pas, vérifiez que le fichier public/forms/mod-g11-fr.png est bien présent après git pull."
+            : simulatePaper
+              ? "Le scan du formulaire G11 est affiché en fond. Alignez le carré rouge sur le coin d'impression."
+              : "Activez « Afficher le scan du formulaire G11 » pour voir votre image en fond."}
         </p>
       </div>
     </div>

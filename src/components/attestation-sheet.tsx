@@ -79,7 +79,7 @@ export function AttestationSheet({
         return (
           <div
             key={field.id}
-            className={`absolute whitespace-pre-wrap ${simulatePaper ? "z-10" : ""}`}
+            className={`absolute whitespace-pre-wrap z-10`}
             style={{
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,

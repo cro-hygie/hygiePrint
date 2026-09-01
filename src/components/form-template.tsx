@@ -1,25 +1,20 @@
 "use client";
 
-import Image from "next/image";
-import { FORM_HEIGHT_MM, FORM_MODEL, FORM_WIDTH_MM } from "@/lib/attestation-layout";
+import { FORM_MODEL } from "@/lib/attestation-layout";
 
-/** Fond scan du formulaire Mod. G11 FR (attestation de soins donnés). */
+/** Scan Mod. G11 FR *15* fourni par l'utilisateur (public/forms/mod-g11-fr.png). */
 export function FormTemplateBackground() {
   return (
-    <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden
-    >
-      <Image
+    <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src="/forms/mod-g11-fr.png"
         alt=""
-        fill
-        className="object-fill"
-        priority
-        sizes={`${FORM_WIDTH_MM}mm`}
+        className="h-full w-full object-fill"
+        draggable={false}
       />
-      <div className="absolute bottom-1 right-2 text-[6pt] text-gray-400 opacity-60">
-        {FORM_MODEL} — simulation hygiePrint
+      <div className="absolute bottom-1 right-2 z-10 text-[6pt] text-gray-500 opacity-70">
+        {FORM_MODEL}
       </div>
     </div>
   );
