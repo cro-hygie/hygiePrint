@@ -20,7 +20,7 @@ import {
   TABLE_TOP_MM,
 } from "@/lib/attestation-layout";
 import type { AppSettings } from "@/lib/types";
-import { FormTemplateBackground } from "@/components/form-template";
+import { FormReceiptBackground, FormTemplateBackground } from "@/components/form-template";
 
 interface AttestationSheetProps {
   settings: AppSettings;
@@ -161,6 +161,7 @@ function CertificatePage({
       }}
     >
       {simulatePaper && page === 1 && <FormTemplateBackground />}
+      {simulatePaper && page === 2 && <FormReceiptBackground />}
 
       {showGrid && (
         <div className="pdf-exclude pointer-events-none absolute inset-0 z-20 opacity-20">
@@ -255,7 +256,7 @@ export function AttestationSheet({
         settings={settings}
         offsetX={offsetX}
         offsetY={offsetY}
-        simulatePaper={false}
+        simulatePaper={simulatePaper}
         showGrid={false}
         showFieldMarkers={showFieldMarkers}
         heightMm={PAGE2_HEIGHT_MM}

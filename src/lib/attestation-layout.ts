@@ -4,11 +4,11 @@
  */
 export const FORM_MODEL = "G11-FR";
 export const FORM_WIDTH_MM = 241;
+export const FORM_HEIGHT_MM = 578;
 /** Hauteur page 1 — attestation (avant perforation). */
 export const PAGE1_HEIGHT_MM = 261;
-/** Hauteur page 2 — reçu (stub hygie-soft, ~3 cm de contenu). */
-export const PAGE2_HEIGHT_MM = 40;
-export const FORM_HEIGHT_MM = 578;
+/** Hauteur page 2 — reçu (moitié basse du carnet, 578 − 261 mm). */
+export const PAGE2_HEIGHT_MM = FORM_HEIGHT_MM - PAGE1_HEIGHT_MM;
 
 /** Largeur zone de contenu hygie-soft (body 10,2 cm). */
 export const CONTENT_WIDTH_MM = 102;
@@ -45,6 +45,42 @@ export const STATIC_FIELDS: StaticField[] = [
   { id: "bce", label: "N° BCE (reçu)", page: 2, top: 10, left: 55, fontSize: FONT_BODY },
   { id: "receipt-date", label: "Date reçu", page: 2, top: 20, left: 60, fontSize: FONT_BODY },
   { id: "receipt-amount", label: "Montant reçu", page: 2, top: 26, left: 35, fontSize: FONT_EMPHASIS },
+  {
+    id: "receipt-payer",
+    label: "Perçu pour le compte de",
+    page: 2,
+    top: 148,
+    left: 35,
+    width: 70,
+    fontSize: FONT_BODY,
+  },
+  {
+    id: "receipt-bce-line",
+    label: "N° BCE (ligne reçu)",
+    page: 2,
+    top: 218,
+    left: 48,
+    width: 55,
+    fontSize: FONT_BODY,
+  },
+  {
+    id: "receipt-sum",
+    label: "Reçu la somme de",
+    page: 2,
+    top: 221,
+    left: 48,
+    width: 55,
+    fontSize: FONT_EMPHASIS,
+  },
+  {
+    id: "receipt-date-bottom",
+    label: "Date signature reçu",
+    page: 2,
+    top: 226,
+    left: 145,
+    width: 40,
+    fontSize: FONT_BODY,
+  },
 ];
 
 /** Grille prestations — tableCode hygie-soft */
@@ -112,10 +148,20 @@ export function getFieldValue(
     case "prescriber-inami":
       return attestation.prescriberInami ?? "";
     case "attestation-date":
+      return attestation.attestationDate;
     case "receipt-date":
+    case "receipt-date-bottom":
       return attestation.attestationDate;
     case "invoice-ref":
       return attestation.invoiceRef ?? "";
+    case "receipt-payer":
+      return attestation.receiptText || patientFull;
+    case "receipt-bce-line":
+      return practitioner.bceNumber || attestation.receiptText;
+    case "receipt-sum":
+      return attestation.patientPaid > 0
+        ? attestation.patientPaid.toFixed(2)
+        : attestation.totalAmount.toFixed(2);
     case "total":
       return showAmount ? attestation.totalAmount.toFixed(2) : "OUI";
     case "receipt-amount":
