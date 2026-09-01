@@ -25,6 +25,9 @@ function sanitizeCloneForExport(clonedDoc: Document): void {
     .querySelectorAll('style, link[rel="stylesheet"]')
     .forEach((node) => node.remove());
 
+  // Export = texte seul (pas le scan — le carnet est déjà pré-imprimé)
+  clonedDoc.querySelectorAll(".form-scan-background").forEach((node) => node.remove());
+
   const safeStyle = clonedDoc.createElement("style");
   safeStyle.textContent = `
     * {

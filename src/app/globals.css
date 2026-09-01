@@ -161,4 +161,8 @@
     box-shadow: none !important;
     border: none !important;
   }
+
+  .form-scan-background {
+    display: none !important;
+  }
 }

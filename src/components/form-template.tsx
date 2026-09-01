@@ -5,7 +5,7 @@ import { FORM_MODEL } from "@/lib/attestation-layout";
 /** Scan officiel propre du formulaire G11 (celui que tu as envoyé). */
 export function FormTemplateBackground() {
   return (
-    <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+    <div className="form-scan-background pointer-events-none absolute inset-0 z-0" aria-hidden>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/forms/mod-g11-fr.png"
