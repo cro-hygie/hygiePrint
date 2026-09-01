@@ -5,6 +5,7 @@ import {
   FORM_HEIGHT_MM,
   FORM_WIDTH_MM,
   getFieldValue,
+  serviceSlotIndex,
 } from "@/lib/attestation-layout";
 import type { AppSettings } from "@/lib/types";
 import { FormTemplateBackground } from "@/components/form-template";
@@ -33,15 +34,14 @@ export function AttestationSheet({
         width: `${FORM_WIDTH_MM}mm`,
         height: `${FORM_HEIGHT_MM}mm`,
         fontFamily: "Courier New, Courier, monospace",
-        fontSize: "10pt",
-        lineHeight: 1.2,
+        fontSize: "9pt",
+        lineHeight: 1.15,
       }}
     >
-      {simulatePaper && (
-        <FormTemplateBackground profession={practitioner.profession} />
-      )}
+      {simulatePaper && <FormTemplateBackground />}
+
       {showGrid && (
-        <div className="pointer-events-none absolute inset-0 opacity-20">
+        <div className="pointer-events-none absolute inset-0 z-20 opacity-20">
           {Array.from({ length: 25 }).map((_, i) => (
             <div
               key={`v-${i}`}
@@ -49,7 +49,7 @@ export function AttestationSheet({
               style={{ left: `${i * 10}mm` }}
             />
           ))}
-          {Array.from({ length: 15 }).map((_, i) => (
+          {Array.from({ length: 33 }).map((_, i) => (
             <div
               key={`h-${i}`}
               className="absolute left-0 right-0 border-t border-blue-400"
@@ -58,11 +58,6 @@ export function AttestationSheet({
           ))}
         </div>
       )}
-
-      <div
-        className="absolute inset-0 border border-dashed border-gray-300 print:border-none"
-        aria-hidden
-      />
 
       {ATTESTATION_FIELDS.map((field) => {
         const value = getFieldValue(
@@ -73,13 +68,13 @@ export function AttestationSheet({
         );
         if (!value) return null;
 
-        const isService = field.id.startsWith("service-");
-        const serviceIdx = isService
-          ? parseInt(field.id.split("-")[1]) - 1
-          : -1;
-        const service = attestation.services[serviceIdx];
+        const slot = serviceSlotIndex(field.id);
+        const service = slot >= 0 ? attestation.services[slot] : null;
         const strikethrough =
-          isService && service && !service.used && printer.strikeUnusedServices;
+          service &&
+          !service.used &&
+          printer.strikeUnusedServices &&
+          field.id.startsWith("service-");
 
         return (
           <div
@@ -89,6 +84,7 @@ export function AttestationSheet({
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,
               width: field.width ? `${field.width}mm` : undefined,
+              fontSize: field.fontSize,
               textDecoration: strikethrough ? "line-through" : undefined,
             }}
             title={field.label}

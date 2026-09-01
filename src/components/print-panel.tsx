@@ -50,10 +50,10 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
       {mode === "attestation" && (
         <Card>
           <CardHeader>
-            <CardTitle>Données de démonstration</CardTitle>
+            <CardTitle>Mod. G11 FR — données de démonstration</CardTitle>
             <CardDescription>
-              Modifiez les champs pour tester l&apos;alignement sur le formulaire
-              simulé ou pré-imprimé
+              Champs alignés sur le formulaire « Attestation de soins donnés »
+              (scan intégré en mode simulation)
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -125,6 +125,23 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
                 }
               />
             </div>
+            <div className="space-y-2">
+              <Label>Adresse patient</Label>
+              <Input
+                value={attestation.patient.address}
+                onChange={(e) =>
+                  onChange({
+                    attestation: {
+                      ...attestation,
+                      patient: {
+                        ...attestation.patient,
+                        address: e.target.value,
+                      },
+                    },
+                  })
+                }
+              />
+            </div>
           </CardContent>
         </Card>
       )}
@@ -182,7 +199,6 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
             <TestPage
               printer={settings.printer}
               simulatePaper={simulatePaper}
-              profession={settings.practitioner.profession}
             />
           ) : (
             <AttestationSheet

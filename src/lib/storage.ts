@@ -19,14 +19,23 @@ export function loadSettings(): AppSettings {
         model: normalizePrinterModel(parsed.printer?.model ?? "epson-lx-350"),
       },
       practitioner: { ...DEFAULT_SETTINGS.practitioner, ...parsed.practitioner },
-      attestation: {
-        ...DEFAULT_SETTINGS.attestation,
-        ...parsed.attestation,
-        patient: {
-          ...DEFAULT_SETTINGS.attestation.patient,
-          ...parsed.attestation?.patient,
+        attestation: {
+          ...DEFAULT_SETTINGS.attestation,
+          ...parsed.attestation,
+          patient: {
+            ...DEFAULT_SETTINGS.attestation.patient,
+            ...parsed.attestation?.patient,
+          },
+          prescriberName:
+            parsed.attestation?.prescriberName ??
+            DEFAULT_SETTINGS.attestation.prescriberName,
+          prescriberDate:
+            parsed.attestation?.prescriberDate ??
+            DEFAULT_SETTINGS.attestation.prescriberDate,
+          prescriberInami:
+            parsed.attestation?.prescriberInami ??
+            DEFAULT_SETTINGS.attestation.prescriberInami,
         },
-      },
       simulatePaper: parsed.simulatePaper ?? DEFAULT_SETTINGS.simulatePaper,
     };
   } catch {

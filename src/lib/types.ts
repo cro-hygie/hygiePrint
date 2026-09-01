@@ -32,6 +32,7 @@ export interface PatientInfo {
   firstName: string;
   niss: string;
   mutuelle: string;
+  address: string;
 }
 
 export interface ServiceLine {
@@ -48,6 +49,9 @@ export interface AttestationData {
   patientPaid: number;
   attestationDate: string;
   receiptText: string;
+  prescriberName: string;
+  prescriberDate: string;
+  prescriberInami: string;
 }
 
 export interface AppSettings {
@@ -84,17 +88,29 @@ export const DEFAULT_ATTESTATION: AttestationData = {
     firstName: "Marie",
     niss: "85.12.30-123.45",
     mutuelle: "Solidaris",
+    address: "Rue Neuve 12, 1000 Bruxelles",
   },
   services: [
-    { code: "567011", date: "01/09/2026", amount: 25.5, used: true },
-    { code: "567012", date: "01/09/2026", amount: 25.5, used: true },
+    { code: "567011", date: "01/09", amount: 25.5, used: true },
+    { code: "567012", date: "03/09", amount: 25.5, used: true },
+    { code: "567013", date: "05/09", amount: 25.5, used: true },
+    { code: "567014", date: "08/09", amount: 25.5, used: true },
+    { code: "567015", date: "10/09", amount: 25.5, used: true },
+    { code: "567016", date: "12/09", amount: 25.5, used: true },
+    { code: "", date: "", amount: 0, used: false },
+    { code: "", date: "", amount: 0, used: false },
+    { code: "", date: "", amount: 0, used: false },
+    { code: "", date: "", amount: 0, used: false },
     { code: "", date: "", amount: 0, used: false },
     { code: "", date: "", amount: 0, used: false },
   ],
-  totalAmount: 51.0,
-  patientPaid: 15.3,
-  attestationDate: "01/09/2026",
+  totalAmount: 153.0,
+  patientPaid: 45.9,
+  attestationDate: "12/09/2026",
   receiptText: "",
+  prescriberName: "Dr Martin",
+  prescriberDate: "01/08/2026",
+  prescriberInami: "1-11111-22-333",
 };
 
 export const DEFAULT_SETTINGS: AppSettings = {

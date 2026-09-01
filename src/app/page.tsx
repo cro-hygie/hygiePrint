@@ -29,9 +29,9 @@ export default function HomePage() {
           <Badge variant="secondary">Belgique</Badge>
         </div>
         <p className="max-w-2xl text-muted-foreground">
-          Outil de configuration et calibration pour imprimantes matricielles
-          utilisées par les médecins et kinésithérapeutes belges — attestations
-          de soins sur formulaires pré-imprimés (format Std plié allemand).
+          Calibration d&apos;impression pour le formulaire belge{" "}
+          <strong>Mod. G11 FR</strong> — Attestation de soins donnés — sur
+          imprimante matricielle Epson LX-350 (format Std plié allemand).
         </p>
       </header>
 

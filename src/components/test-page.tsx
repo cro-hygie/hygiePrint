@@ -1,20 +1,18 @@
 "use client";
 
 import { FormTemplateBackground } from "@/components/form-template";
-import { getPrinterModelInfo } from "@/lib/printer-models";
 import { FORM_HEIGHT_MM, FORM_WIDTH_MM } from "@/lib/attestation-layout";
-import type { PrinterConfig, Profession } from "@/lib/types";
+import { getPrinterModelInfo } from "@/lib/printer-models";
+import type { PrinterConfig } from "@/lib/types";
 
 interface TestPageProps {
   printer: PrinterConfig;
   simulatePaper?: boolean;
-  profession?: Profession;
 }
 
 export function TestPage({
   printer,
   simulatePaper = false,
-  profession = "kine",
 }: TestPageProps) {
   const { marginX, marginY, model } = printer;
   const modelLabel = getPrinterModelInfo(model).label;
@@ -29,7 +27,7 @@ export function TestPage({
         fontSize: "9pt",
       }}
     >
-      {simulatePaper && <FormTemplateBackground profession={profession} />}
+      {simulatePaper && <FormTemplateBackground />}
       <div className="absolute left-2 top-2 z-10 text-xs font-bold">
         PAGE DE TEST — hygiePrint
       </div>
