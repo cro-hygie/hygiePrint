@@ -8,7 +8,22 @@ export function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    return {
+      ...DEFAULT_SETTINGS,
+      ...parsed,
+      printer: { ...DEFAULT_SETTINGS.printer, ...parsed.printer },
+      practitioner: { ...DEFAULT_SETTINGS.practitioner, ...parsed.practitioner },
+      attestation: {
+        ...DEFAULT_SETTINGS.attestation,
+        ...parsed.attestation,
+        patient: {
+          ...DEFAULT_SETTINGS.attestation.patient,
+          ...parsed.attestation?.patient,
+        },
+      },
+      simulatePaper: parsed.simulatePaper ?? DEFAULT_SETTINGS.simulatePaper,
+    };
   } catch {
     return DEFAULT_SETTINGS;
   }

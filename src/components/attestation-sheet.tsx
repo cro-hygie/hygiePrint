@@ -7,16 +7,19 @@ import {
   getFieldValue,
 } from "@/lib/attestation-layout";
 import type { AppSettings } from "@/lib/types";
+import { FormTemplateBackground } from "@/components/form-template";
 
 interface AttestationSheetProps {
   settings: AppSettings;
   showGrid?: boolean;
+  simulatePaper?: boolean;
   className?: string;
 }
 
 export function AttestationSheet({
   settings,
   showGrid = false,
+  simulatePaper = false,
   className = "",
 }: AttestationSheetProps) {
   const { printer, practitioner, attestation } = settings;
@@ -34,6 +37,9 @@ export function AttestationSheet({
         lineHeight: 1.2,
       }}
     >
+      {simulatePaper && (
+        <FormTemplateBackground profession={practitioner.profession} />
+      )}
       {showGrid && (
         <div className="pointer-events-none absolute inset-0 opacity-20">
           {Array.from({ length: 25 }).map((_, i) => (
@@ -78,7 +84,7 @@ export function AttestationSheet({
         return (
           <div
             key={field.id}
-            className="absolute whitespace-pre-wrap"
+            className={`absolute whitespace-pre-wrap ${simulatePaper ? "z-10" : ""}`}
             style={{
               top: `${field.top + offsetY}mm`,
               left: `${field.left + offsetX}mm`,

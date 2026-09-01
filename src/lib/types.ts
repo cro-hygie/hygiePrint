@@ -50,6 +50,7 @@ export interface AppSettings {
   printer: PrinterConfig;
   practitioner: PractitionerProfile;
   attestation: AttestationData;
+  simulatePaper: boolean;
 }
 
 export const DEFAULT_PRINTER: PrinterConfig = {
@@ -96,4 +97,5 @@ export const DEFAULT_SETTINGS: AppSettings = {
   printer: DEFAULT_PRINTER,
   practitioner: DEFAULT_PRACTITIONER,
   attestation: DEFAULT_ATTESTATION,
+  simulatePaper: true,
 };

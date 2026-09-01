@@ -29,6 +29,7 @@ export function useSettings() {
             ...patch.attestation?.patient,
           },
         },
+        simulatePaper: patch.simulatePaper ?? prev.simulatePaper,
       };
       saveSettings(next);
       return next;

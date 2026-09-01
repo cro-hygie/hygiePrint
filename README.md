@@ -9,8 +9,19 @@ Outil web pour **médecins et kinésithérapeutes belges** qui utilisent une **i
 - **Profil prestataire** — nom, n° INAMI, n° BCE, adresse du cachet
 - **Page de test** — grille millimétrique pour calibrer l'alignement sur votre carnet
 - **Aperçu attestation** — simulation d'impression avec police monospace (style matricielle)
+- **Mode simulation** — fond de formulaire pré-imprimé belge simulé (sans imprimante)
+- **Export PDF** — archivez vos réglages de calibration et d'attestation
 
 La configuration est sauvegardée localement dans le navigateur (localStorage).
+
+## Tester sans imprimante (option B)
+
+1. Activez **Formulaire pré-imprimé simulé** dans Calibration ou Aperçu attestation
+2. Remplissez votre profil prestataire (Configuration)
+3. Ajustez les marges X/Y jusqu'à ce que le texte tombe dans les cases
+4. **Exportez en PDF** pour archiver le réglage
+5. Le jour J (avec imprimante), comparez le PDF avec l'impression réelle
+
 
 ## Contexte belge
 
