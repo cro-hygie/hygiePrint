@@ -64,7 +64,10 @@ export async function exportElementToPdf(
   const sheet =
     element.querySelector<HTMLElement>(".attestation-sheet") ?? element;
 
-  const pages = sheet.querySelectorAll<HTMLElement>(".certificate-page");
+  const pages = Array.from(
+    sheet.querySelectorAll<HTMLElement>(".certificate-page"),
+  ).slice(0, 2);
+
   if (pages.length === 0) {
     throw new Error("Aucune page à exporter.");
   }
@@ -73,7 +76,7 @@ export async function exportElementToPdf(
 
   const pdf = new jsPDF({
     unit: "mm",
-    format: [FORM_WIDTH_MM, heights[0] ?? PAGE1_HEIGHT_MM],
+    format: [FORM_WIDTH_MM, heights[0]],
     orientation: "portrait",
     compress: true,
   });
@@ -81,6 +84,8 @@ export async function exportElementToPdf(
   for (let i = 0; i < pages.length; i++) {
     const pageEl = pages[i];
     const heightMm = heights[i] ?? PAGE2_HEIGHT_MM;
+
+    pageEl.style.overflow = "hidden";
     const canvas = await capturePage(pageEl, options.includeScan ?? false);
 
     if (i > 0) {
@@ -95,7 +100,7 @@ export async function exportElementToPdf(
       FORM_WIDTH_MM,
       heightMm,
       undefined,
-      "FAST",
+      "SLOW",
     );
   }
 

@@ -84,7 +84,7 @@ function ServiceTable({
     >
       {Array.from({ length: SERVICE_ROWS }, (_, i) => {
         const slot = serviceSlotIndex(column, i + 1);
-        const { date, code } = getServiceCell(slot, attestation);
+        const { date, code } = getServiceCell(slot, attestation, showPlaceholders);
         const used = attestation.services[slot]?.used;
         return (
           <div
@@ -152,7 +152,7 @@ function CertificatePage({
 
   return (
     <div
-      className="certificate-page relative bg-white text-black"
+      className="certificate-page relative overflow-hidden bg-white text-black"
       style={{
         width: `${FORM_WIDTH_MM}mm`,
         height: `${heightMm}mm`,
@@ -179,6 +179,7 @@ function CertificatePage({
           attestation={attestation}
           offsetX={offsetX}
           offsetY={offsetY}
+          showPlaceholders={simulatePaper}
         />
       )}
 

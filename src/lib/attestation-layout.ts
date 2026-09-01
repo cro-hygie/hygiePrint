@@ -6,9 +6,9 @@ export const FORM_MODEL = "G11-FR";
 export const FORM_WIDTH_MM = 241;
 /** Hauteur page 1 — attestation (avant perforation). */
 export const PAGE1_HEIGHT_MM = 261;
-/** Hauteur page 2 — reçu (après perforation). */
-export const PAGE2_HEIGHT_MM = 317;
-export const FORM_HEIGHT_MM = PAGE1_HEIGHT_MM + PAGE2_HEIGHT_MM;
+/** Hauteur page 2 — reçu (stub hygie-soft, ~3 cm de contenu). */
+export const PAGE2_HEIGHT_MM = 40;
+export const FORM_HEIGHT_MM = 578;
 
 /** Largeur zone de contenu hygie-soft (body 10,2 cm). */
 export const CONTENT_WIDTH_MM = 102;

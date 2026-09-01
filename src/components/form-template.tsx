@@ -22,6 +22,8 @@ export function FormTemplateBackground() {
           width: `${FORM_WIDTH_MM}mm`,
           height: `${FORM_HEIGHT_MM}mm`,
           display: "block",
+          objectFit: "none",
+          objectPosition: "top left",
         }}
         draggable={false}
       />
