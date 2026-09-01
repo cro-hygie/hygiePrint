@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS, type AppSettings } from "./types";
+import { normalizePrinterModel } from "./printer-models";
 
 const STORAGE_KEY = "hygieprint-settings";
 
@@ -12,7 +13,11 @@ export function loadSettings(): AppSettings {
     return {
       ...DEFAULT_SETTINGS,
       ...parsed,
-      printer: { ...DEFAULT_SETTINGS.printer, ...parsed.printer },
+      printer: {
+        ...DEFAULT_SETTINGS.printer,
+        ...parsed.printer,
+        model: normalizePrinterModel(parsed.printer?.model ?? "epson-lx-350"),
+      },
       practitioner: { ...DEFAULT_SETTINGS.practitioner, ...parsed.practitioner },
       attestation: {
         ...DEFAULT_SETTINGS.attestation,

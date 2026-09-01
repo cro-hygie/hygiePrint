@@ -1,6 +1,7 @@
 "use client";
 
 import { FormTemplateBackground } from "@/components/form-template";
+import { getPrinterModelInfo } from "@/lib/printer-models";
 import { FORM_HEIGHT_MM, FORM_WIDTH_MM } from "@/lib/attestation-layout";
 import type { PrinterConfig, Profession } from "@/lib/types";
 
@@ -15,7 +16,8 @@ export function TestPage({
   simulatePaper = false,
   profession = "kine",
 }: TestPageProps) {
-  const { marginX, marginY } = printer;
+  const { marginX, marginY, model } = printer;
+  const modelLabel = getPrinterModelInfo(model).label;
 
   return (
     <div
@@ -79,7 +81,7 @@ export function TestPage({
       >
         <p>Alignez ce carré rouge avec le coin supérieur gauche</p>
         <p>de la zone d&apos;impression de votre formulaire pré-imprimé.</p>
-        <p className="mt-2">Modèle: {printer.model.toUpperCase()}</p>
+        <p className="mt-2">Modèle: {modelLabel}</p>
         <p>Format: Std plié allemand ({FORM_WIDTH_MM} × {FORM_HEIGHT_MM} mm)</p>
       </div>
 

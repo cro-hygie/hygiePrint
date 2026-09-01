@@ -13,58 +13,62 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getPrinterModelInfo } from "@/lib/printer-models";
 import { AlertCircle, CheckCircle2, Printer } from "lucide-react";
 
-const STEPS = [
+const LX350_STEPS = [
   {
-    title: "Brancher et allumer l'imprimante",
+    title: "Charger le papier continu",
     description:
-      "Connectez l'imprimante matricielle (EPSON LQ, OKI Microline…) via USB. Allumez-la avant de lancer votre logiciel médical — sinon le format papier peut disparaître de la configuration.",
+      "Insérez le carnet d'attestations par l'arrière (tracteur). Largeur 241 mm (Std plié allemand). Alignez le bord sur la flèche marquée sur l'imprimante.",
   },
   {
-    title: "Installer le pilote",
+    title: "USB + allumage",
     description:
-      "Installez le pilote officiel du fabricant. Vérifiez que l'imprimante est visible dans les périphériques Windows/Mac avant de configurer CareConnect, KineQuick ou hygiePrint.",
+      "Branchez la LX-350 en USB. Allumez-la avant d'ouvrir hygiePrint, CareConnect ou KineQuick — sinon le format papier peut disparaître de la config.",
+  },
+  {
+    title: "Installer le pilote Epson",
+    description:
+      "Téléchargez le pilote officiel LX-350 sur epson.eu. Vérifiez qu'elle apparaît dans les imprimantes Windows/Mac.",
   },
   {
     title: "Format « Std plié allemand »",
     description:
-      "Dans les paramètres d'impression, sélectionnez le format « Std plié allemand ». Sur les imprimantes OKI, ce champ peut parfois rester vide — c'est normal.",
+      "Dans les propriétés d'impression : format « Std plié allemand ». Qualité Draft pour la vitesse, NLQ pour une meilleure lisibilité.",
   },
   {
-    title: "Calibrer les marges",
+    title: "Calibrer avec hygiePrint",
     description:
-      "Imprimez une page de test depuis l'onglet Calibration. Ajustez les marges X (horizontal) et Y (vertical) jusqu'à ce que le texte s'aligne sur votre formulaire pré-imprimé.",
+      "Onglet Calibration → imprimez la page de test. Ajustez les marges X/Y jusqu'à l'alignement sur votre carnet pré-imprimé.",
   },
   {
     title: "Bouton Load/Eject",
     description:
-      "Si l'impression est décalée après un redémarrage, appuyez deux fois sur le bouton Load/Eject de l'imprimante pour réinitialiser le chargement du papier.",
+      "Si l'impression est décalée : appuyez 2× sur Load/Eject pour réinitialiser le chargement du papier.",
   },
 ];
 
 const WEB_PRINT_TIPS = [
-  "Sélectionnez votre imprimante EPSON/OKI dans la fenêtre d'impression",
+  "Destination : Epson LX-350",
   "Format du papier : « STD plié allemand »",
   "Windows : échelle « Ajuster à la taille du papier »",
   "Mac : ne pas modifier l'échelle",
   "Vérifiez la configuration avant chaque impression via le navigateur",
 ];
 
+const lx350 = getPrinterModelInfo("epson-lx-350");
+
 export function SetupGuide() {
   return (
     <div className="space-y-6">
       <Alert>
         <AlertCircle className="size-4" />
-        <AlertTitle>Contexte belge — attestations de soins</AlertTitle>
+        <AlertTitle>Epson LX-350 — votre imprimante</AlertTitle>
         <AlertDescription>
-          Les médecins et kinésithérapeutes belges utilisent encore des
-          imprimantes matricielles pour imprimer sur des formulaires
-          pré-imprimés (attestations de soins). Depuis septembre 2025,{" "}
-          <strong>eAttest</strong> est obligatoire pour les médecins et
-          dentistes ; pour les kinés, l&apos;obligation entre en vigueur en
-          janvier 2027. L&apos;attestation papier reste utile en cas de panne
-          réseau ou pour le document justificatif patient.
+          Imprimante matricielle 9 aiguilles, 80 colonnes, papier continu
+          jusqu&apos;à 254 mm de large. Idéale pour les carnets d&apos;attestations
+          belges (original + copies). hygiePrint est préconfiguré pour ce modèle.
         </AlertDescription>
       </Alert>
 
@@ -73,15 +77,15 @@ export function SetupGuide() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Printer className="size-5" />
-              Configuration matérielle
+              Configuration LX-350
             </CardTitle>
             <CardDescription>
-              Imprimantes compatibles : EPSON LQ-350, LQ-690, OKI Microline…
+              9 pins · USB · papier continu arrière · jusqu&apos;à 5 feuillets
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ol className="space-y-4">
-              {STEPS.map((step, i) => (
+              {LX350_STEPS.map((step, i) => (
                 <li key={step.title} className="flex gap-3">
                   <Badge variant="secondary" className="mt-0.5 shrink-0">
                     {i + 1}
@@ -95,6 +99,18 @@ export function SetupGuide() {
                 </li>
               ))}
             </ol>
+            {lx350.driverUrl && (
+              <p className="mt-4 text-sm">
+                <a
+                  href={lx350.driverUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  Pilote officiel Epson LX-350
+                </a>
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -102,7 +118,7 @@ export function SetupGuide() {
           <CardHeader>
             <CardTitle className="text-lg">Impression via le navigateur</CardTitle>
             <CardDescription>
-              Si vous utilisez CareConnect Web ou un PDF dans Chrome
+              CareConnect Web, PDF Chrome → Epson LX-350
             </CardDescription>
           </CardHeader>
           <CardContent>

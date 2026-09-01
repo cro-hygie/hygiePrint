@@ -19,7 +19,9 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { getPrinterModelInfo, PRINTER_MODELS } from "@/lib/printer-models";
 import type { AppSettings, PrinterConfig } from "@/lib/types";
+import { CheckCircle2 } from "lucide-react";
 
 interface PrinterConfigFormProps {
   settings: AppSettings;
@@ -31,6 +33,7 @@ export function PrinterConfigForm({
   onChange,
 }: PrinterConfigFormProps) {
   const { printer } = settings;
+  const modelInfo = getPrinterModelInfo(printer.model);
 
   const updatePrinter = (patch: Partial<PrinterConfig>) => {
     onChange({ printer: { ...printer, ...patch } });
@@ -59,9 +62,11 @@ export function PrinterConfigForm({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="epson">EPSON (LQ-350, LQ-690…)</SelectItem>
-                <SelectItem value="oki">OKI Microline</SelectItem>
-                <SelectItem value="autre">Autre</SelectItem>
+                {Object.values(PRINTER_MODELS).map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -70,6 +75,30 @@ export function PrinterConfigForm({
             <Label>Format papier</Label>
             <Input value="Std plié allemand" disabled />
           </div>
+        </div>
+
+        <div className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
+          <p className="font-medium">{modelInfo.label} — réglages recommandés</p>
+          <ul className="space-y-2">
+            {modelInfo.tips.map((tip) => (
+              <li key={tip} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
+                {tip}
+              </li>
+            ))}
+          </ul>
+          {modelInfo.driverUrl && (
+            <p className="text-sm">
+              <a
+                href={modelInfo.driverUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                Télécharger le pilote Epson LX-350
+              </a>
+            </p>
+          )}
         </div>
 
         <div className="space-y-4">

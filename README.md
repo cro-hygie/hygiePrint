@@ -84,8 +84,8 @@ Les logiciels métier (CareConnect, KineQuick…) gèrent la tarification INAMI 
 1. Chargez votre formulaire pré-imprimé dans l'imprimante matricielle.
 2. Calibrez via l'onglet **Calibration** (page de test).
 3. Ajustez les marges dans **Configuration** jusqu'à l'alignement correct.
-4. À l'impression, choisissez :
-   - Imprimante : EPSON / OKI
+4. À l'impression sur **Epson LX-350**, choisissez :
+   - Imprimante : **Epson LX-350**
    - Format : **Std plié allemand**
    - Windows : échelle **Ajuster à la taille du papier**
    - Mac : ne pas modifier l'échelle

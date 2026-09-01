@@ -1,6 +1,10 @@
 export type Profession = "medecin" | "kine" | "dentiste";
 
-export type PrinterModel = "epson" | "oki" | "autre";
+export type PrinterModel =
+  | "epson-lx-350"
+  | "epson-lq-350"
+  | "oki"
+  | "autre";
 
 export interface PrinterConfig {
   model: PrinterModel;
@@ -54,7 +58,7 @@ export interface AppSettings {
 }
 
 export const DEFAULT_PRINTER: PrinterConfig = {
-  model: "epson",
+  model: "epson-lx-350",
   paperFormat: "std-plie-allemand",
   marginX: 0,
   marginY: 0,
