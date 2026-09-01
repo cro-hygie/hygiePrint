@@ -1,5 +1,6 @@
 "use client";
 
+import { AttestationForm } from "@/components/attestation-form";
 import { PractitionerForm } from "@/components/practitioner-form";
 import { PrintPanel } from "@/components/print-panel";
 import { PrinterConfigForm } from "@/components/printer-config-form";
@@ -38,13 +39,18 @@ export default function HomePage() {
       <Tabs defaultValue="guide" className="space-y-6">
         <TabsList className="flex h-auto flex-wrap">
           <TabsTrigger value="guide">Guide</TabsTrigger>
+          <TabsTrigger value="attestation">Attestation</TabsTrigger>
           <TabsTrigger value="config">Configuration</TabsTrigger>
           <TabsTrigger value="calibration">Calibration</TabsTrigger>
-          <TabsTrigger value="preview">Aperçu attestation</TabsTrigger>
+          <TabsTrigger value="preview">Aperçu & impression</TabsTrigger>
         </TabsList>
 
         <TabsContent value="guide">
           <SetupGuide />
+        </TabsContent>
+
+        <TabsContent value="attestation">
+          <AttestationForm settings={settings} onChange={updateSettings} />
         </TabsContent>
 
         <TabsContent value="config" className="space-y-6">

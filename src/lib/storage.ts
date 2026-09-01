@@ -1,5 +1,6 @@
 import { DEFAULT_SETTINGS, type AppSettings } from "./types";
 import { normalizePrinterModel } from "./printer-models";
+import { normalizeServices } from "./service-utils";
 
 const STORAGE_KEY = "hygieprint-settings";
 
@@ -35,6 +36,10 @@ export function loadSettings(): AppSettings {
           prescriberInami:
             parsed.attestation?.prescriberInami ??
             DEFAULT_SETTINGS.attestation.prescriberInami,
+          services: normalizeServices(
+            parsed.attestation?.services ??
+              DEFAULT_SETTINGS.attestation.services,
+          ),
         },
       simulatePaper: parsed.simulatePaper ?? DEFAULT_SETTINGS.simulatePaper,
     };

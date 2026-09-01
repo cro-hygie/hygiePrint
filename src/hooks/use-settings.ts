@@ -28,6 +28,8 @@ export function useSettings() {
             ...prev.attestation.patient,
             ...patch.attestation?.patient,
           },
+          services:
+            patch.attestation?.services ?? prev.attestation.services,
         },
         simulatePaper: patch.simulatePaper ?? prev.simulatePaper,
       };
