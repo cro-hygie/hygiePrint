@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { exportElementToPdf, pdfFilename } from "@/lib/export-pdf";
+import { exportAttestationToPdf, exportElementToPdf, pdfFilename } from "@/lib/export-pdf";
 import { DEMO_ATTESTATION, DEMO_PRACTITIONER } from "@/lib/demo-data";
 import type { AppSettings } from "@/lib/types";
 import { Download, FileText, Printer, RotateCcw } from "lucide-react";
@@ -37,12 +37,17 @@ export function PrintPanel({ settings, onChange, mode }: PrintPanelProps) {
   };
 
   const handleExportPdf = async () => {
-    if (!printAreaRef.current) return;
     setExporting(true);
     setExportError(null);
     try {
       const prefix = mode === "test" ? "calibration" : "attestation";
-      await exportElementToPdf(printAreaRef.current, pdfFilename(prefix));
+      const filename = pdfFilename(prefix);
+      if (mode === "attestation") {
+        exportAttestationToPdf(settings, filename);
+      } else {
+        if (!printAreaRef.current) return;
+        await exportElementToPdf(printAreaRef.current, filename);
+      }
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "L'export PDF a échoué.";
